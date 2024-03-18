@@ -1,0 +1,107 @@
+<div class="container">
+
+    <div class="row">
+        <div class="mx-auto text-center">
+            <h1>STOCK SEARCH</h1>
+        </div>
+    </div>
+
+
+    <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+        <div class="row searchForm">
+            <div class="input-group mx-auto justify-content-center rounded-pill inpgrp">
+                <input type="text" placeholder="Enter stock ticker symbol" formControlName="ticker"
+                    class="form-control border-0 m-0 p-0 rounded-pill inpgrptxt" />
+                <button class="btn border-0 m-0" type="submit" id="button-addon1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-search" viewBox="0 0 16 16">
+                        <path
+                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                    </svg>
+
+                </button>
+                <button class="btn border-0 m-0" type="button" id="button-addon1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path
+                            d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                    </svg>
+
+                </button>
+
+            </div>
+        </div>
+    </form>
+
+    <div *ngIf="responseDataQuote">
+        <div class="row mt-4">
+            <div class="nameCard col text-center">
+                <p style="font-weight: bold; font-size: larger;">{{responseDataProfile.ticker}}</p>
+                <p style="font-weight: bold;">{{responseDataProfile.name}}</p>
+                <p>{{responseDataProfile.exchange}}</p>
+            </div>
+            <div class="logo col text-center">
+                <img src="{{responseDataProfile.logo}}" alt="logo">
+                <!-- <p>{{responseData.logo}}</p> -->
+            </div>
+            <div class="stockPrice col text-center">
+                <p>{{responseDataQuote.c}}</p>
+                <p>{{responseDataQuote.d}}({{responseDataQuote.dp}}%)</p>
+                <p>{{formatDate(responseDataQuote.t)}}</p>
+            </div>
+        </div>
+        <div class="row mt-4 text-center">
+            <div *ngIf="timeDiff(responseDataQuote.t); else elseBlock">
+                <p>Market is Open</p>
+            </div>
+            <ng-template #elseBlock>
+                <p>Market is Closed</p>
+            </ng-template>
+        </div>
+        <div class="row mt-4">
+            <button class="col tabs" (click)="showTab('summary')" [ngClass]="{'active':currentTab === 'summary'}">
+                Summary
+            </button>
+            <button class="col tabs" (click)="showTab('topNews')" [ngClass]="{'active':currentTab === 'topNews'}">
+                Top News
+            </button>
+            <button class="col tabs" (click)="showTab('charts')" [ngClass]="{'active':currentTab === 'charts'}">
+                Charts
+            </button>
+            <button class="col tabs" (click)="showTab('insights')" [ngClass]="{'active':currentTab === 'insights'}">
+                Insights
+            </button>
+        </div>
+        <div class="row mt-4">
+            <div class="row" *ngIf="currentTab === 'summary'">
+                <div class="col text-center">
+                    <p><span style="font-weight: bold;">High Price: </span>{{responseDataQuote.h}}</p>
+                    <p><span style="font-weight: bold;">Low Price: </span>{{responseDataQuote.l}}</p>
+                    <p><span style="font-weight: bold;">Open Price: </span>{{responseDataQuote.o}}</p>
+                    <p><span style="font-weight: bold;">Prev. Close: </span>{{responseDataQuote.pc}}</p>
+                    <hr>
+                    <p style="font-weight: bold; text-decoration: underline;">About the company</p>
+                    <p><span style="font-weight: bold;">IPO Start Date: </span>{{responseDataProfile.ipo}}</p>
+                    <p><span style="font-weight: bold;">Industry: </span>{{responseDataProfile.finnhubIndustry}}</p>
+                    <p><span style="font-weight: bold;">Webpage: </span>{{responseDataProfile.weburl}}</p>
+                    <p><span style="font-weight: bold;">IPO Start Date: </span>{{responseDataProfile.ipo}}</p>
+                </div>
+                <div class="col">
+                    Chart
+                </div>
+            </div>
+            <div *ngIf="currentTab === 'topNews'">
+                Top news tab
+            </div>
+            <div *ngIf="currentTab === 'charts'">
+                charts tab
+            </div>
+            <div *ngIf="currentTab === 'insights'">
+                insights tab
+            </div>
+        </div>
+    </div>
+
+
+
+</div>

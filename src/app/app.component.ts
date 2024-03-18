@@ -7,4 +7,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'stock-market';
+  displayVal:string='';
+  getValue(val:string)
+  {
+    console.log(val);
+    this.displayVal=val;
+  }
 }
