@@ -11,6 +11,7 @@ export class SearchFormComponent implements OnInit {
   searchForm!: FormGroup;
   responseDataProfile:any;
   responseDataQuote:any;
+  responseDataPeers:any;
   currentTab:string='summary';
 
   constructor(
@@ -21,7 +22,7 @@ export class SearchFormComponent implements OnInit {
 
   ngOnInit(): void {
       this.searchForm = this.formBuilder.group({ticker:''});
-      console.log(this.searchForm);
+      // console.log(this.searchForm);
   }
 
 
@@ -51,6 +52,18 @@ export class SearchFormComponent implements OnInit {
         console.error('Error:', error);
       }
     });
+    
+    this.http.post('http://localhost:3000/search/peers', { ticker: tickerSymbol })
+    .subscribe({
+      next: (response) => {
+        console.log(response);
+        this.responseDataPeers=response;
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      }
+    });
+
   }
 
   formatDate(timestamp:number): string {
@@ -80,5 +93,17 @@ export class SearchFormComponent implements OnInit {
   showTab(clickedTab:string)
   {
     this.currentTab=clickedTab;
+  }
+
+  searchPeer(peer:string)
+  {
+    this.searchForm.controls['ticker'].setValue(peer);
+    this.onSubmit();
+  }
+  clearAll()
+  {
+    this.responseDataPeers=null;
+    this.responseDataProfile=null;
+    this.responseDataQuote=null;
   }
 }

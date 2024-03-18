@@ -11,7 +11,7 @@
         <div class="row searchForm">
             <div class="input-group mx-auto justify-content-center rounded-pill inpgrp">
                 <input type="text" placeholder="Enter stock ticker symbol" formControlName="ticker"
-                    class="form-control border-0 m-0 p-0 rounded-pill inpgrptxt" />
+                    class="form-control border-0 m-0 p-0 rounded-pill inpgrptxt"/>
                 <button class="btn border-0 m-0" type="submit" id="button-addon1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-search" viewBox="0 0 16 16">
@@ -20,7 +20,7 @@
                     </svg>
 
                 </button>
-                <button class="btn border-0 m-0" type="button" id="button-addon1">
+                <button class="btn border-0 m-0" type="button" id="button-addon1" (click)="clearAll()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-x-lg" viewBox="0 0 16 16">
                         <path
@@ -33,7 +33,7 @@
         </div>
     </form>
 
-    <div *ngIf="responseDataQuote">
+    <div *ngIf="responseDataProfile || responseDataQuote || responseDataPeers">
         <div class="row mt-4">
             <div class="nameCard col text-center">
                 <p style="font-weight: bold; font-size: larger;">{{responseDataProfile.ticker}}</p>
@@ -45,17 +45,35 @@
                 <!-- <p>{{responseData.logo}}</p> -->
             </div>
             <div class="stockPrice col text-center">
-                <p>{{responseDataQuote.c}}</p>
-                <p>{{responseDataQuote.d}}({{responseDataQuote.dp}}%)</p>
-                <p>{{formatDate(responseDataQuote.t)}}</p>
+                <div *ngIf="responseDataQuote.d < 0" style="color: red;">
+                    <p>{{responseDataQuote.c}}</p>
+                    <p>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                          </svg>
+                        {{responseDataQuote.d}}({{responseDataQuote.dp}}%)
+                    </p>
+                    <p style="color: black;">{{formatDate(responseDataQuote.t)}}</p>
+                </div>
+                <div *ngIf="responseDataQuote.d >= 0" style="color: green;">
+                    <p>{{responseDataQuote.c}}</p>
+                    <p>
+                        
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                            <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                          </svg>
+                        {{responseDataQuote.d}}({{responseDataQuote.dp}}%)
+                    </p>
+                    <p style="color: black;">{{formatDate(responseDataQuote.t)}}</p>
+                </div>
             </div>
         </div>
         <div class="row mt-4 text-center">
             <div *ngIf="timeDiff(responseDataQuote.t); else elseBlock">
-                <p>Market is Open</p>
+                <p style="color: green;">Market is Open</p>
             </div>
             <ng-template #elseBlock>
-                <p>Market is Closed</p>
+                <p style="color: red;">Market is Closed</p>
             </ng-template>
         </div>
         <div class="row mt-4">
@@ -79,12 +97,21 @@
                     <p><span style="font-weight: bold;">Low Price: </span>{{responseDataQuote.l}}</p>
                     <p><span style="font-weight: bold;">Open Price: </span>{{responseDataQuote.o}}</p>
                     <p><span style="font-weight: bold;">Prev. Close: </span>{{responseDataQuote.pc}}</p>
-                    <hr>
+                    
                     <p style="font-weight: bold; text-decoration: underline;">About the company</p>
                     <p><span style="font-weight: bold;">IPO Start Date: </span>{{responseDataProfile.ipo}}</p>
                     <p><span style="font-weight: bold;">Industry: </span>{{responseDataProfile.finnhubIndustry}}</p>
-                    <p><span style="font-weight: bold;">Webpage: </span>{{responseDataProfile.weburl}}</p>
-                    <p><span style="font-weight: bold;">IPO Start Date: </span>{{responseDataProfile.ipo}}</p>
+                    <p><span style="font-weight: bold;">Webpage: </span><a href="{{responseDataProfile.weburl}}" target="_blank">{{responseDataProfile.weburl}}</a></p>
+                    <p><span style="font-weight: bold;">Company Peers: </span>
+                        <ng-container *ngFor="let peer of responseDataPeers">
+                            <ng-container *ngIf="!peer.includes('.')">
+                                <a href="javascript:void(0);" (click)="searchPeer(peer)">{{peer}}</a>
+                                <span>, </span>
+                            </ng-container>
+                        </ng-container>
+                    </p>
+
+
                 </div>
                 <div class="col">
                     Chart
