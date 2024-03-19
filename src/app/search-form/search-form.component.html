@@ -34,7 +34,7 @@
     </form>
 
     <div *ngIf="isLoading; else detailsLoaded">
-        <mat-spinner></mat-spinner>
+        <mat-spinner class="mx-auto"></mat-spinner>
     </div>
     <ng-template #detailsLoaded>
         <div class="row mt-4">
@@ -116,90 +116,5 @@
             <mat-tab label="Insights"> Content 3 </mat-tab>
         </mat-tab-group>
     </ng-template>
-    <!-- <div *ngIf="responseDataProfile || responseDataQuote || responseDataPeers">
-        <div class="row mt-4">
-            <div class="nameCard col text-center">
-                <p style="font-weight: bold; font-size: larger;">{{responseDataProfile.ticker}}</p>
-                <p style="font-weight: bold;">{{responseDataProfile.name}}</p>
-                <p>{{responseDataProfile.exchange}}</p>
-            </div>
-            <div class="logo col text-center">
-                <img src="{{responseDataProfile.logo}}" alt="logo">
-                
-            </div>
-            <div class="stockPrice col text-center">
-                <div *ngIf="responseDataQuote.d < 0" style="color: red;">
-                    <p>{{responseDataQuote.c}}</p>
-                    <p>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                            <path
-                                d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
-                        </svg>
-                        {{responseDataQuote.d}}({{responseDataQuote.dp}}%)
-                    </p>
-                    <p style="color: black;">{{formatDate(responseDataQuote.t)}}</p>
-                </div>
-                <div *ngIf="responseDataQuote.d >= 0" style="color: green;">
-                    <p>{{responseDataQuote.c}}</p>
-                    <p>
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                            <path
-                                d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
-                        </svg>
-                        {{responseDataQuote.d}}({{responseDataQuote.dp}}%)
-                    </p>
-                    <p style="color: black;">{{formatDate(responseDataQuote.t)}}</p>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-4 text-center">
-            <div *ngIf="timeDiff(responseDataQuote.t); else elseBlock">
-                <p style="color: green;">Market is Open</p>
-            </div>
-            <ng-template #elseBlock>
-                <p style="color: red;">Market is Closed</p>
-            </ng-template>
-        </div>
-        <mat-tab-group>
-            <mat-tab label="Summary">
-                <div class="row">
-
-                    <div class="col text-center">
-                        <p><span style="font-weight: bold;">High Price: </span>{{responseDataQuote.h}}</p>
-                        <p><span style="font-weight: bold;">Low Price: </span>{{responseDataQuote.l}}</p>
-                        <p><span style="font-weight: bold;">Open Price: </span>{{responseDataQuote.o}}</p>
-                        <p><span style="font-weight: bold;">Prev. Close: </span>{{responseDataQuote.pc}}</p>
-
-                        <p style="font-weight: bold; text-decoration: underline;">About the company</p>
-                        <p><span style="font-weight: bold;">IPO Start Date: </span>{{responseDataProfile.ipo}}</p>
-                        <p><span style="font-weight: bold;">Industry: </span>{{responseDataProfile.finnhubIndustry}}</p>
-                        <p><span style="font-weight: bold;">Webpage: </span><a href="{{responseDataProfile.weburl}}"
-                                target="_blank">{{responseDataProfile.weburl}}</a></p>
-                        <p><span style="font-weight: bold;">Company Peers: </span>
-                            <ng-container *ngFor="let peer of responseDataPeers">
-                                <ng-container *ngIf="!peer.includes('.')">
-                                    <a href="javascript:void(0);" (click)="searchPeer(peer)">{{peer}}</a>
-                                    <span>, </span>
-                                </ng-container>
-                            </ng-container>
-                        </p>
-                    </div>
-                    <div class="col">
-                        Chart
-                    </div>
-                </div>
-            </mat-tab>
-            <mat-tab label="Top News"> Content 2 </mat-tab>
-            <mat-tab label="Charts"> Content 3 </mat-tab>
-            <mat-tab label="Insights"> Content 3 </mat-tab>
-        </mat-tab-group>
-
-
-    </div> -->
-
-
-
+    <app-details></app-details>
 </div>

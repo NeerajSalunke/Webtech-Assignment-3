@@ -68,13 +68,13 @@ export class SearchFormComponent implements OnInit {
       next: (response) => {
         console.log(response);
         this.responseDataPeers=response;
+        this.isLoading=false;
       },
       error: (error) => {
         console.error('Error:', error);
       }
     });
     
-    this.isLoading=false;
   }
 
   formatDate(timestamp:number): string {
