@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SearchFormComponent } from './search-form/search-form.component';
 import { DetailsComponent } from './details/details.component';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import {MatTabsModule} from '@angular/material/tabs';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MatTabsModule
+    MatTabsModule,
+    MatProgressSpinnerModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

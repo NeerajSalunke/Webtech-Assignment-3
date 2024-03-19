@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -15,11 +17,14 @@ export class SearchFormComponent implements OnInit {
   responseDataProfile:any;
   responseDataQuote:any;
   responseDataPeers:any;
-  currentTab:string='summary';
+  // currentTab:string='summary';
+
+  isLoading:boolean=false;
 
   constructor(
     public formBuilder:FormBuilder,
-    public http: HttpClient
+    public http: HttpClient,
+    private router: Router
     // public searchForm: FormGroup
   ){}
 
@@ -30,9 +35,11 @@ export class SearchFormComponent implements OnInit {
 
 
   onSubmit(){
+    this.isLoading=true;
     const tickerSymbol = this.searchForm.value.ticker;
     console.log(tickerSymbol);
-    this.currentTab='summary';
+    // this.currentTab='summary';
+    // this.router.navigate(['/search/', tickerSymbol]); 
 
     this.http.post('http://localhost:3000/search/profile', { ticker: tickerSymbol })
     .subscribe({
@@ -66,7 +73,8 @@ export class SearchFormComponent implements OnInit {
         console.error('Error:', error);
       }
     });
-
+    
+    this.isLoading=false;
   }
 
   formatDate(timestamp:number): string {
@@ -93,10 +101,10 @@ export class SearchFormComponent implements OnInit {
     }
     return true;
   }
-  showTab(clickedTab:string)
-  {
-    this.currentTab=clickedTab;
-  }
+  // showTab(clickedTab:string)
+  // {
+  //   this.currentTab=clickedTab;
+  // }
 
   searchPeer(peer:string)
   {
@@ -108,5 +116,6 @@ export class SearchFormComponent implements OnInit {
     this.responseDataPeers=null;
     this.responseDataProfile=null;
     this.responseDataQuote=null;
+    this.searchForm.controls['ticker'].setValue('');
   }
 }
