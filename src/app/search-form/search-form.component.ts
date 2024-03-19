@@ -17,7 +17,9 @@ export class SearchFormComponent implements OnInit {
   responseDataProfile:any;
   responseDataQuote:any;
   responseDataPeers:any;
+  showDetailsComp: boolean=false;
   // currentTab:string='summary';
+
 
   isLoading:boolean=false;
 
@@ -39,6 +41,7 @@ export class SearchFormComponent implements OnInit {
     const tickerSymbol = this.searchForm.value.ticker;
     console.log(tickerSymbol);
     // this.currentTab='summary';
+    this.showDetailsComp=true;
     this.router.navigate(['/search/', tickerSymbol]); 
 
     this.http.post('http://localhost:3000/search/profile', { ticker: tickerSymbol })
@@ -113,9 +116,12 @@ export class SearchFormComponent implements OnInit {
   }
   clearAll()
   {
-    this.responseDataPeers=null;
-    this.responseDataProfile=null;
-    this.responseDataQuote=null;
+    // this.responseDataPeers=null;
+    // this.responseDataProfile=null;
+    // this.responseDataQuote=null;
     this.searchForm.controls['ticker'].setValue('');
+    this.showDetailsComp=false;
+  
+
   }
 }
