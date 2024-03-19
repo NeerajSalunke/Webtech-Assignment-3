@@ -39,7 +39,7 @@ export class SearchFormComponent implements OnInit {
     const tickerSymbol = this.searchForm.value.ticker;
     console.log(tickerSymbol);
     // this.currentTab='summary';
-    // this.router.navigate(['/search/', tickerSymbol]); 
+    this.router.navigate(['/search/', tickerSymbol]); 
 
     this.http.post('http://localhost:3000/search/profile', { ticker: tickerSymbol })
     .subscribe({
