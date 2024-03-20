@@ -12,13 +12,17 @@ import { SearchFormComponent } from './search-form/search-form.component';
 import { DetailsComponent } from './details/details.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { WatchlistComponent } from './watchlist/watchlist.component';
+import { PortfolioComponent } from './portfolio/portfolio.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     SearchFormComponent,
-    DetailsComponent
+    DetailsComponent,
+    WatchlistComponent,
+    PortfolioComponent
   ],
   imports: [
     BrowserModule,
