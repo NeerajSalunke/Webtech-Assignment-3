@@ -20,6 +20,7 @@ export class HeaderComponent {
           if(str.substring(lastindex+1)!='home')
           {
             this.ticker=str.substring(lastindex+1);
+            
           }
           
         }
