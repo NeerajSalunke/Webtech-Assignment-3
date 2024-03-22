@@ -2,6 +2,19 @@ img{
     width: 70px;
 }
 
+#tableDiv{
+    /* width: 70%; */
+}
+
+.table1{
+    margin: 0px auto;
+}
+
 .table1 tr{
+    /* margin-left: auto; */
     border-bottom: 1px solid lightgrey;
+}
+
+.table1 td{
+    padding: 10px;
 }

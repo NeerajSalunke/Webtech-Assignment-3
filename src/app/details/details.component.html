@@ -81,7 +81,11 @@
                         </p>
                     </div>
                     <div class="col">
-                        Chart
+                        {{displayHourlyStockPrice()}}
+                        <highcharts-chart [Highcharts]="Highcharts" [constructorType]="chartConstructor"
+                            [options]="chartOptions" [(update)]="updateFlag" [oneToOne]="oneToOneFlag"
+                            [runOutsideAngular]="runOutsideAngular"
+                            style="width: 100%; height: 400px; display: block;"></highcharts-chart>
                     </div>
                 </div>
             </mat-tab>
@@ -89,30 +93,35 @@
             <mat-tab label="Charts"> Content 3 </mat-tab>
             <mat-tab label="Insights">
                 <p class="text-center" style="font-size: x-large;">Insider Sentiments</p>
-                <div class="container">
+                <div class="row justify-content-center">
 
-                    <table class="table1 text-center">
-                        <tr>
-                            <td>{{responseDataProfile.name}}</td>
-                            <td>MSPR</td>
-                            <td>Change</td>
-                        </tr>
-                        <tr>
-                            <td>Total</td>
-                            <td>{{aggregateMSPR("t")}}</td>
-                            <td>{{aggregateChange("t")}}</td>
-                        </tr>
-                        <tr>
-                            <td>Positive</td>
-                            <td>{{aggregateMSPR("p")}}</td>
-                            <td>{{aggregateChange("p")}}</td>
-                        </tr>
-                        <tr>
-                            <td>Negative</td>
-                            <td>{{aggregateMSPR("n")}}</td>
-                            <td>{{aggregateChange("n")}}</td>
-                        </tr>
-                    </table>
+                    <div class="container" id="tableDiv">
+                        <table class="table1 text-center">
+                            <tr>
+                                <td style="font-weight: bold;">{{responseDataProfile.name}}</td>
+                                <td style="font-weight: bold;">MSPR</td>
+                                <td style="font-weight: bold;">Change</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Total</td>
+                                <td>{{aggregateMSPR("t")}}</td>
+                                <td>{{aggregateChange("t")}}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Positive</td>
+                                <td>{{aggregateMSPR("p")}}</td>
+                                <td>{{aggregateChange("p")}}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Negative</td>
+                                <td>{{aggregateMSPR("n")}}</td>
+                                <td>{{aggregateChange("n")}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    
                 </div>
             </mat-tab>
         </mat-tab-group>

@@ -8,11 +8,11 @@ export class DetailsService {
 
   setData(key: string, data: any) {
     this.data[key] = data;
-    console.log("setting data...")
+    // console.log("setting data...")
   }
 
   getData(key: string): any {
-    console.log("getting data");
+    // console.log("getting data");
     return this.data[key];
   }
 }
