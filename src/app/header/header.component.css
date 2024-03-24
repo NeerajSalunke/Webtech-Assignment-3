@@ -1,9 +1,13 @@
 .navbar{
     background-color: #2324a3;
-    /* width: 100%; */
+    /* position: fixed;
+    top: 0;
+    width: 100%; */
+    /* margin-bottom: 10px; */
 }
 .navbar-brand{
     color: white;
+    /* margin-top: 40px; */
 }
 .navbar-nav .nav-link {
     color: white; /* Set default link color */
