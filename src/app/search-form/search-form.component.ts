@@ -21,6 +21,8 @@ export class SearchFormComponent implements OnInit {
   responseDataSentiments: any;
   responseDataPolyHour: any;
   responseDataRecTrends: any;
+  responseDataCompEarn: any;
+  responseDataPolyTwoYr: any;
   showDetailsComp: boolean = false;
   tickerSymbol:any;
 
@@ -48,6 +50,8 @@ export class SearchFormComponent implements OnInit {
     this.responseDataPeers = this.detailsService.getData('peers');
     this.responseDataPolyHour = this.detailsService.getData('polyHour');
     this.responseDataRecTrends=this.detailsService.getData('recTren');
+    this.responseDataCompEarn=this.detailsService.getData('compEarn');
+    this.responseDataPolyTwoYr=this.detailsService.getData('polyTwoYr');
     if(this.responseDataSentiments = this.detailsService.getData('sentiments'))
     {
       this.showDetailsComp=true;
@@ -70,7 +74,7 @@ export class SearchFormComponent implements OnInit {
     
     this.router.navigate(['/search/', this.tickerSymbol]);
 
-    this.http.post('http://localhost:3000/search/profile', { ticker: this.tickerSymbol })
+    this.http.get(`http://localhost:3000/search/profile?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // console.log(response);
@@ -83,7 +87,7 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-    this.http.post('http://localhost:3000/search/quote', { ticker: this.tickerSymbol })
+    this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // console.log(response);
@@ -95,7 +99,7 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-    this.http.post('http://localhost:3000/search/peers', { ticker: this.tickerSymbol })
+    this.http.get(`http://localhost:3000/search/peers?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // console.log(response);
@@ -109,7 +113,7 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-    this.http.post('http://localhost:3000/search/insights/insiderSentiments', { ticker: this.tickerSymbol })
+    this.http.get(`http://localhost:3000/search/insights/insiderSentiments?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // console.log(response);
@@ -122,11 +126,11 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-    this.http.post('http://localhost:3000/search/polygonHourly', { ticker: this.tickerSymbol })
+    this.http.get(`http://localhost:3000/search/polygonHourly?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // this.newTicker=true;
-          console.log(response);
+          // console.log(response);
           this.responseDataPolyHour = response;
           this.detailsService.setData('polyHour', this.responseDataPolyHour);
           // this.isLoading=false;
@@ -136,13 +140,41 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-    this.http.post('http://localhost:3000/search/recTrends', { ticker: this.tickerSymbol })
+    this.http.get(`http://localhost:3000/search/recTrends?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // this.newTicker=true;
-          console.log(response);
+          // console.log(response);
           this.responseDataRecTrends = response;
           this.detailsService.setData('recTren', this.responseDataRecTrends);
+          // this.isLoading=false;
+        },
+        error: (error) => {
+          console.error('Error:', error);
+        }
+      });
+
+    this.http.get(`http://localhost:3000/search/companyEarnings?ticker=${this.tickerSymbol}`)
+      .subscribe({
+        next: (response) => {
+          // this.newTicker=true;
+          // console.log(response);
+          this.responseDataCompEarn = response;
+          this.detailsService.setData('compEarn', this.responseDataCompEarn);
+          // this.isLoading=false;
+        },
+        error: (error) => {
+          console.error('Error:', error);
+        }
+      });
+
+    this.http.get(`http://localhost:3000/search/polygonTwoYr?ticker=${this.tickerSymbol}`)
+      .subscribe({
+        next: (response) => {
+          // this.newTicker=true;
+          // console.log(response);
+          this.responseDataPolyTwoYr = response;
+          this.detailsService.setData('polyTwoYr', this.responseDataPolyTwoYr);
           // this.isLoading=false;
         },
         error: (error) => {
