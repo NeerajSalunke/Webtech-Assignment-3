@@ -32,7 +32,7 @@ export class DetailsComponent implements OnInit {
   // this.displayHourlyStockPrice();
 
   @Output() peerClicked = new EventEmitter<string>();
-  stockPrices: number[] = [];
+  stockPrices: any[] = [];
   xAxisRecTren: string[] = [];
   strongBuyArray: number[] =[];
   buyArray: number[] =[];
@@ -59,6 +59,7 @@ export class DetailsComponent implements OnInit {
     // console.log(typeof this.chartOptions[1].chartConfig);
     // console.log(typeof this.columnChartOptions);
     // this.displayTwoYr();
+    // this.stockPrices=[];
   }
   
 
@@ -67,8 +68,12 @@ export class DetailsComponent implements OnInit {
     // console.log(this.responseDataPolyHour);
    
    
-    this.responseDataPolyHour.results.forEach((element: { c: number }) => {
-      this.stockPrices.push(element.c);
+    this.responseDataPolyHour.results.forEach((element: { c: number,t:number }) => {
+      // this.stockPrices.push(element.c);
+      this.stockPrices.push([
+        element.t,
+        element.c,
+      ]);
     });
     
     // console.log(this.stockPrices);
@@ -128,7 +133,7 @@ export class DetailsComponent implements OnInit {
     },
     
     xAxis:{
-      // type:'datetime'
+      type:'datetime'
     },
     yAxis:{
       labels:{
@@ -217,7 +222,13 @@ export class DetailsComponent implements OnInit {
     },
     
     xAxis:{
-      categories: this.periodArr
+      categories:this.periodArr
+      // labels:{
+      //   formatter:function () {
+      //     var arr =  ['Jan', 'Feb', 'Mar', 'Apr']
+          
+      //   }
+      // }
     },
     yAxis:{
       title:{

@@ -19,6 +19,8 @@ import { PortfolioComponent } from './portfolio/portfolio.component';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { FooterComponent } from './footer/footer.component';
 
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +40,8 @@ import { FooterComponent } from './footer/footer.component';
     HttpClientModule,
     MatTabsModule,
     MatProgressSpinnerModule,
-    HighchartsChartModule
+    HighchartsChartModule,
+    MatAutocompleteModule
   ],
   providers: [],
   bootstrap: [AppComponent],

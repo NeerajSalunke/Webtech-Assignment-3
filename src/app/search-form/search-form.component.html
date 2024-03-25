@@ -11,7 +11,24 @@
         <div class="row searchForm">
             <div class="input-group mx-auto justify-content-center rounded-pill inpgrp">
                 <input type="text" placeholder="Enter stock ticker symbol" formControlName="ticker"
-                    class="form-control border-0 m-0 p-0 rounded-pill inpgrptxt" />
+                    class="form-control border-0 m-0 p-0 rounded-pill inpgrptxt" [matAutocomplete]="auto" />
+
+
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSubmit()">
+                    <div *ngIf="isFetching; else fetched">
+                        <mat-option>
+                            <mat-spinner class="mx-auto" [diameter]="30"></mat-spinner>
+                        </mat-option>
+                    </div>
+                    <ng-template #fetched>
+                        <div *ngIf="this.searchForm.value.ticker!=''">
+                            <mat-option *ngFor="let option of filteredOptions" [value]="option[0]">
+                                {{ option[0] }} <span> | </span> {{ option[1] }}
+                            </mat-option>
+                        </div>
+                    </ng-template>
+                </mat-autocomplete>
+
                 <button class="btn border-0 m-0" type="submit" id="button-addon1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-search" viewBox="0 0 16 16">
@@ -30,21 +47,21 @@
                 </button>
 
             </div>
+            <ngb-alert style="margin-top: 5px;" #selfClosingAlert *ngIf="isInputEmpty" type="danger">
+                Please enter a valid ticker
+            </ngb-alert>
+            <ngb-alert style="margin-top: 5px;" #selfClosingAlert *ngIf="invalidTicker" type="danger">
+                No data found. Please enter a valid ticker
+            </ngb-alert>
+
         </div>
     </form>
 
-    
-    <app-details *ngIf="showDetailsComp" 
-    [responseDataProfile]="responseDataProfile" 
-    [responseDataQuote]="responseDataQuote" 
-    [responseDataPeers]="responseDataPeers"
-    [isLoading]="isLoading"
-    [searchForm]="searchForm"
-    [onSubmit]="onSubmit"
-    [responseDataSentiments]="responseDataSentiments"
-    [responseDataPolyHour]="responseDataPolyHour"
-    [responseDataRecTrends]="responseDataRecTrends"
-    [responseDataCompEarn]="responseDataCompEarn"
-    [responseDataPolyTwoYr]="responseDataPolyTwoYr"
-    [tickerSymbol]="tickerSymbol"></app-details>
+
+    <app-details *ngIf="showDetailsComp" [responseDataProfile]="responseDataProfile"
+        [responseDataQuote]="responseDataQuote" [responseDataPeers]="responseDataPeers" [isLoading]="isLoading"
+        [searchForm]="searchForm" [onSubmit]="onSubmit" [responseDataSentiments]="responseDataSentiments"
+        [responseDataPolyHour]="responseDataPolyHour" [responseDataRecTrends]="responseDataRecTrends"
+        [responseDataCompEarn]="responseDataCompEarn" [responseDataPolyTwoYr]="responseDataPolyTwoYr"
+        [tickerSymbol]="tickerSymbol"></app-details>
 </div>
