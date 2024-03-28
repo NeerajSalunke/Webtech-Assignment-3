@@ -1,24 +1,39 @@
 <div class="container">
+    <ngb-alert style="margin-top: 5px; text-align: center;" #selfClosingAlert *ngIf="addedToWlSuccessMsg" type="success">
+        {{responseDataProfile.ticker}} added to Watchlist.
+    </ngb-alert>
+    <ngb-alert style="margin-top: 5px; text-align: center;" #selfClosingAlert *ngIf="stockBought" type="success">
+        {{responseDataProfile.ticker}} bought successfully.
+    </ngb-alert>
     <div *ngIf="isLoading; else detailsLoaded">
         <mat-spinner class="mx-auto"></mat-spinner>
     </div>
     <ng-template #detailsLoaded>
         <div class="row mt-4">
             <div class="nameCard col text-center">
-                <p style="font-weight: bold; font-size: larger;">{{responseDataProfile.ticker}}
+                <p style="font-size:20px; font-weight: bold;">{{responseDataProfile.ticker}}
                     <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-star" viewBox="0 0 16 16">
+                        <span *ngIf="!isAddedToWatchlist; else otherSvg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-star" viewBox="0 0 16 16" (click)="this.addToWatchlist()">
                             <path
                                 d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z" />
-                        </svg>
+                            </svg>
+                        </span>
+                        <ng-template #otherSvg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="yellow" class="bi bi-star-fill" viewBox="0 0 16 16" (click)="this.removeFromWatchlist(responseDataProfile.ticker)">
+                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                              </svg>
+                        </ng-template>
+                        
+                        
                     </span>
                 </p>
                 <p style="font-weight: bold;">{{responseDataProfile.name}}</p>
                 <p>{{responseDataProfile.exchange}}</p>
                 <div>
-                    <button type="button" class="btn btn-success m-1">Buy</button>
-                    <button type="button" class="btn btn-danger m-1">Sell</button>
+                    <button type="button" class="btn btn-success m-1" (click)="open(buyModal)">Buy</button>
+                    <button type="button" class="btn btn-danger m-1" *ngIf="isBought">Sell</button>
                 </div>
             </div>
             <div class="logo col text-center">
@@ -26,19 +41,19 @@
             </div>
             <div class="stockPrice col text-center">
                 <div *ngIf="responseDataQuote.d < 0" style="color: red;">
-                    <p>{{responseDataQuote.c}}</p>
+                    <p style="font-size:20px; font-weight: bold;">{{responseDataQuote.c}}</p>
                     <p>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                             <path
                                 d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
                         </svg>
-                        {{responseDataQuote.d}}({{responseDataQuote.dp}}%)
+                        <span style="font-size:15px; font-weight: bold;">{{responseDataQuote.d}}</span>({{responseDataQuote.dp | number:'1.2-2'}}%)
                     </p>
                     <p style="color: black;">{{formatDate(responseDataQuote.t)}}</p>
                 </div>
                 <div *ngIf="responseDataQuote.d >= 0" style="color: green;">
-                    <p>{{responseDataQuote.c}}</p>
+                    <p style="font-size:20px; font-weight: bold;">{{responseDataQuote.c}}</p>
                     <p>
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -46,7 +61,7 @@
                             <path
                                 d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
                         </svg>
-                        {{responseDataQuote.d}}({{responseDataQuote.dp}}%)
+                        <span style="font-size:15px; font-weight: bold;">{{responseDataQuote.d}}</span>({{responseDataQuote.dp | number:'1.2-2'}}%)
                     </p>
                     <p style="color: black;">{{formatDate(responseDataQuote.t)}}</p>
                 </div>
@@ -88,8 +103,7 @@
                         <!-- {{displayHourlyStockPrice()}} -->
                         <highcharts-chart [Highcharts]="Highcharts" [constructorType]="chartConstructor"
                             [options]="lineChart" [(update)]="updateFlag" [oneToOne]="oneToOneFlag"
-                            [runOutsideAngular]="runOutsideAngular"
-                            style="width: 100%; height: 300px;"></highcharts-chart>
+                            [runOutsideAngular]="runOutsideAngular" style=" height: 300px;"></highcharts-chart>
                             <!-- {{this.stockPrices.splice(0)}} -->
                     </div>
                 </div>
@@ -138,15 +152,38 @@
                     <div class="col" *ngIf="responseDataRecTrends">
                         {{displayRecTren()}}
                         <highcharts-chart [Highcharts]="Highcharts" [constructorType]="chartConstructor"
-                            [options]="columnChart" style="width: 100%; height: 400px;"></highcharts-chart>
+                            [options]="columnChart" style="height: 400px;"></highcharts-chart>
                     </div>
                     <div class="col" *ngIf="responseDataCompEarn">
                         {{displayCompEarn()}}
                         <highcharts-chart [Highcharts]="Highcharts" [constructorType]="chartConstructor"
-                            [options]="splineChart" style="width: 100%; height: 400px;"></highcharts-chart>
+                            [options]="splineChart" style="height: 400px;"></highcharts-chart>
                     </div>
                 </div>
             </mat-tab>
         </mat-tab-group>
+    </ng-template>
+    <ng-template #buyModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{responseDataProfile.ticker}}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div>Current Price {{responseDataQuote.c}}</div>
+                <div>Money in Wallet: ${{balance | number:'1.2-2'}}</div>
+                <div class="mb-3">
+                    <label for="quantity">Quantity:</label>
+                    <div class="input-group">
+                        <input type="text" id="quantity" name="quantity" [(ngModel)]="quantity">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div style="margin-left: 0px;">Total: {{(quantity*responseDataQuote.c) | number:'1.2-2'}}</div>
+            <!-- <button type="button" class="btn btn-success" (click)="modal.close('Save click')">Buy</button> -->
+            <button type="button" class="btn btn-success" (click)="buyStock(balance-(quantity*responseDataQuote.c));modal.close('Save click')">Buy</button>
+        </div>
     </ng-template>
 </div>

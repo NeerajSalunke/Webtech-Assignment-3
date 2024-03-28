@@ -1,0 +1,22 @@
+.container{
+    margin-top: 80px;
+}
+
+.container2{
+    border: 1px solid lightgrey;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.row{
+    text-align: left;
+    margin-left: 15px;
+}
+
+.topRow{
+    padding-top: 15px;
+}
+
+.btnRow{
+    padding-bottom: 15px;
+}

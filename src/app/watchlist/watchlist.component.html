@@ -1,1 +1,59 @@
-<p>watchlist works!</p>
+<div class="container">
+    <p style="font-size: 30px; font-weight: bold;">My Watchlist</p>
+    <div *ngIf="isLoading; else detailsLoaded">
+        <mat-spinner class="mx-auto"></mat-spinner>
+    </div>
+    <ng-template #detailsLoaded>
+        <ng-container *ngIf="dataOfStocksInWatchlist.length==0; else watchlistLoaded">
+            <ngb-alert type="warning" style="text-align: center;">
+                Currently you don't have any stock in your watchlist
+            </ngb-alert>
+        </ng-container>
+        <ng-template #watchlistLoaded>
+            <div class="detailsBox" *ngFor="let stock of dataOfStocksInWatchlist">
+                <div class="detailsBoxColumn">
+                    <button (click)="deleteStock(stock.ticker)" class="btn border-0 m-0" >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
+                            class="bi bi-x-lg" viewBox="0 0 16 16">
+                            <path
+                                d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                        </svg>
+                    </button>
+                    <br>
+                    <p style="font-size: 20px; font-weight: bold;">
+                        {{ stock.ticker }}
+                    </p>
+                </div>
+                <!-- <div>
+                    {{stock.data.c}}
+                    <br>
+                    {{stock.data.d}}
+                    ({{stock.data.dp}}%)
+                </div> -->
+                <div *ngIf="stock.data.d < 0" style="color: red;" class="detailsBoxColumn">
+                    <p style="font-size:20px; font-weight: bold;">{{stock.data.c}}</p>
+                    <p>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                        </svg>
+                        {{stock.data.d}}({{stock.data.dp}}%)
+                    </p>
+                </div>
+                <div *ngIf="stock.data.d>0" style="color: green;" class="detailsBoxColumn">
+                    <p style="font-size:20px; font-weight: bold;">{{stock.data.c}}</p>
+                    <p>
+    
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                            <path
+                                d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                        </svg>
+                        {{stock.data.d}}({{stock.data.dp}}%)
+                    </p>
+                </div>
+            </div>
+        </ng-template>
+    </ng-template>
+</div>

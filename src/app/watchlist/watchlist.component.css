@@ -1,0 +1,29 @@
+.container{
+    margin-top: 80px;
+    /* margin: auto auto; */
+    /* align-items: center; */
+}
+
+.btn{
+    position: absolute;
+    top: 2px;
+    left: 2px;
+
+}
+
+.detailsBox{
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 10px; 
+    border: 1px solid lightgrey;
+    border-radius: 1px;
+    margin-bottom: 3px;
+    height: 100px;
+    align-items: center;
+    position: relative;
+}
+
+.detailsBoxColumn{
+    margin-left: 20px;
+    /* margin-top: 10px; */
+}

@@ -14,6 +14,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { WatchlistComponent } from './watchlist/watchlist.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
+import { FormsModule } from '@angular/forms';
 
 // import { HighchartsChartComponent } from 'highcharts-angular';
 import { HighchartsChartModule } from 'highcharts-angular';
@@ -21,6 +22,9 @@ import { FooterComponent } from './footer/footer.component';
 
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
+// import { Component, inject, TemplateRef } from '@angular/core';
+
+import {  NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,7 +45,9 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatTabsModule,
     MatProgressSpinnerModule,
     HighchartsChartModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    NgbDatepickerModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,1 +1,100 @@
-<p>portfolio works!</p>
+<div class="container">
+    <p style="font-size: 30px; font-weight: bold;">My Portfolio</p>
+    <p>Money in Wallet: ${{this.balance | number:'1.2-2'}}</p>
+    <div *ngIf="isLoading; else portFolioContent">
+        <mat-spinner class="mx-auto"></mat-spinner>
+    </div>
+    <ng-template #portFolioContent>
+        <ng-container *ngIf="portfolioList.length==0; else portfolioLoaded">
+            <ngb-alert type="warning" style="text-align: center;">
+                Currently you don't have any stock.
+            </ngb-alert>
+        </ng-container>
+        <ng-template #portfolioLoaded>
+            <div *ngFor="let portfolio of portfolioList" class="container2" >
+                <div class="row topRow align-items-center">
+                    <div class="col-2 col-sm-1" style="font-size: 20px; font-weight: bold;">{{portfolio.ticker}}</div>
+                    <div class="col-2 col-sm-1">{{portfolio.name}}</div>
+                    <div class="col-8 col-sm-10"></div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="row">
+                        <div class="col-6 col-sm-3">Quantity</div>
+                        <div class="col-6 col-sm-3">{{portfolio.quantity}}</div>
+                        <div class="col-6 col-sm-3">Change</div>
+                        <div class="col-6 col-sm-3">0.00</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 col-sm-3">Avg. Cost / Share</div>
+                        <div class="col-6 col-sm-3">{{portfolio.price}}</div>
+                        <div class="col-6 col-sm-3">Current Price</div>
+                        <div class="col-6 col-sm-3">{{portfolio.price}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 col-sm-3">Total Cost</div>
+                        <div class="col-6 col-sm-3">{{ (parseNumber(portfolio.quantity) * parseNumber(portfolio.price)) | number:'1.2-2'}}</div>
+                        <div class="col-6 col-sm-3">Market Value</div>
+                        <div class="col-6 col-sm-3">{{ (parseNumber(portfolio.quantity) * parseNumber(portfolio.price)) | number:'1.2-2'}}</div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row btnRow align-items-center">
+                    <div class="col-2 col-sm-1">
+                        <button class="btn btn-primary" (click)="openBuyModal(portfolio); open(buyModal)">Buy</button>
+                    </div>
+                    <div class="col-2 col-sm-1">
+                        <button class="btn btn-danger" (click)="openBuyModal(portfolio); open(sellModal)">Sell</button>
+                    </div>
+                    <div class="col-8 col-sm-10"></div>
+                </div>
+            </div>
+        </ng-template>
+    </ng-template>
+    <ng-template #buyModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{selectedPortfolio.ticker}}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div>Current Price {{selectedPortfolio.price}}</div>
+                <div>Money in Wallet: ${{balance | number:'1.2-2'}}</div>
+                <div class="mb-3">
+                    <label for="quantity">Quantity:</label>
+                    <div class="input-group">
+                        <input type="text" id="quantity" name="quantity" [(ngModel)]="quantity">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div style="margin-left: 0px;">Total: {{(quantity*selectedPortfolio.price) | number:'1.2-2'}}</div>
+            <!-- <button type="button" class="btn btn-success" (click)="modal.close('Save click')">Buy</button> -->
+            <button type="button" class="btn btn-success" (click)="buyStock(balance-(quantity*selectedPortfolio.price));modal.close('Save click')">Buy</button>
+        </div>
+    </ng-template>
+    <ng-template #sellModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{selectedPortfolio.ticker}}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div>Current Price {{selectedPortfolio.price}}</div>
+                <div>Money in Wallet: ${{balance | number:'1.2-2'}}</div>
+                <div class="mb-3">
+                    <label for="quantity">Quantity:</label>
+                    <div class="input-group">
+                        <input type="text" id="quantity" name="quantity" [(ngModel)]="quantity">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div style="margin-left: 0px;">Total: {{(quantity*selectedPortfolio.price) | number:'1.2-2'}}</div>
+            <!-- <button type="button" class="btn btn-success" (click)="modal.close('Save click')">Buy</button> -->
+            <button type="button" class="btn btn-success" (click)="sellStock(+balance+(quantity*selectedPortfolio.price));modal.close('Save click')">Sell</button>
+        </div>
+    </ng-template>
+</div>
