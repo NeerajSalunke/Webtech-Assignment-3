@@ -11,7 +11,7 @@
         <div class="row searchForm">
             <div class="input-group mx-auto justify-content-center rounded-pill inpgrp">
                 <input type="text" placeholder="Enter stock ticker symbol" formControlName="ticker"
-                    class="form-control border-0 m-0 p-0 rounded-pill inpgrptxt" [matAutocomplete]="auto" />
+                    class="form-control border-0 m-0 p-0 rounded-pill inpgrptxt" [matAutocomplete]="auto" (input)="onInputChange($event)"/>
 
 
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSubmit()">
@@ -66,5 +66,6 @@
         [searchForm]="searchForm" [onSubmit]="onSubmit" [responseDataSentiments]="responseDataSentiments"
         [responseDataPolyHour]="responseDataPolyHour" [responseDataRecTrends]="responseDataRecTrends"
         [responseDataCompEarn]="responseDataCompEarn" [responseDataPolyTwoYr]="responseDataPolyTwoYr"
-        [tickerSymbol]="tickerSymbol"></app-details>
+        [tickerSymbol]="tickerSymbol"
+        [news1]="news1" [news2]="news2"></app-details>
 </div>

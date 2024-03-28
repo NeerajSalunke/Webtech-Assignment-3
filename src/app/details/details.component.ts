@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { inject, TemplateRef } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -31,6 +32,12 @@ export class DetailsComponent implements OnInit {
   @Input() isLoading: boolean = false;
   @Input() searchForm: any;
   @Input() onSubmit: any;
+
+  // for news
+  @Input() news1: any;
+  @Input() news2: any;
+  // 
+
   // @Input() newTicker: any;
   @Input() tickerSymbol!: any;
   symbol!: any;
@@ -66,7 +73,19 @@ export class DetailsComponent implements OnInit {
   constructor(
     public http: HttpClient,
     private detailsService: DetailsService,
+    private datePipe: DatePipe
   ) { }
+
+  encodeURL(text: string): string {
+    return encodeURIComponent(text);
+  }
+
+  
+  formatDate2(timestamp: number): string {
+    const milliseconds = timestamp * 1000; // Convert to milliseconds
+    const formattedDate = this.datePipe.transform(milliseconds, 'MMMM d, y');
+    return formattedDate !== null ? formattedDate : ''; // Handle null value by returning an empty string
+}
 
   private modalService = inject(NgbModal);
 
@@ -377,7 +396,11 @@ export class DetailsComponent implements OnInit {
     },
     chart: {
       type: "column",
-      backgroundColor: '#f5f5f5'
+      backgroundColor: '#f5f5f5',
+      scrollablePlotArea: {
+        minWidth: 350,
+        scrollPositionX: 1
+    }
     },
 
     xAxis: {

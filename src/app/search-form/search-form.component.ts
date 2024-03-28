@@ -31,6 +31,9 @@ export class SearchFormComponent implements OnInit {
   filteredOptions: any[] = [];
   isFetching: boolean = false;
 
+  news1: any;
+  news2: any;
+
   @Input() searchPeer!: (peer: string) => void;
 
 
@@ -65,6 +68,10 @@ export class SearchFormComponent implements OnInit {
       this.responseDataRecTrends = this.detailsService.getData('recTren');
       this.responseDataCompEarn = this.detailsService.getData('compEarn');
       this.responseDataPolyTwoYr = this.detailsService.getData('polyTwoYr');
+
+      this.news1 = this.detailsService.getData('news1');
+      this.news2 = this.detailsService.getData('news2')
+
       if (this.responseDataSentiments = this.detailsService.getData('sentiments')) {
         this.showDetailsComp = true;
         // this.newTicker=true;
@@ -257,6 +264,8 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
+      
+
     this.http.get(`http://localhost:3000/search/polygonTwoYr?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
@@ -271,11 +280,43 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
+      this.http.get<any[]>(`http://localhost:3000/search/top_news?ticker=${this.tickerSymbol}`).subscribe({
+  next: (response) => {
+    // Filter out items with both image URL and headline
+    const filteredResponse = response.filter(item => item.image && item.headline);
+    console.log("Filtered response toh dekho",filteredResponse);
 
+    // Determine the length of the filtered response array
+    const responseLength = filteredResponse.length;
 
+    if (responseLength >= 20) {
+      // If the filtered response has 20 or more items, take the first 20
+      this.news1 = filteredResponse.slice(0, 10);
+      this.news2 = filteredResponse.slice(10, 20);
+    } else if (responseLength > 0) {
+      // If the filtered response has fewer than 20 items but more than 0, divide them into two halves
+      const halfLength = Math.ceil(responseLength / 2);
+      this.news1 = filteredResponse.slice(0, halfLength);
+      this.news2 = filteredResponse.slice(halfLength);
+    } else {
+      // If there are no items with both image URL and headline, set both news arrays to empty
+      this.news1 = [];
+      this.news2 = [];
+    }
+
+    this.detailsService.setData('news1', this.news1);
+    this.detailsService.setData('news2', this.news2);
+    console.log("News 1 dekho - ",this.news1);
+    console.log("News2 dekho",this.news2);
+  },
+  error: (error) => {
+    console.error('Error:', error);
+  }
+});
+      
   }
 
-
+  
 
   // showTab(clickedTab:string)
   // {
@@ -300,5 +341,12 @@ export class SearchFormComponent implements OnInit {
     this.invalidTicker=false;
 
 
+  }
+  onInputChange(event:Event){
+    const target = event.target as HTMLInputElement;
+    const value = target.value.trim();
+    if (value === '') {
+        this.clearAll();
+    }
   }
 }

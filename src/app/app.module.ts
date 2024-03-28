@@ -15,6 +15,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { WatchlistComponent } from './watchlist/watchlist.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 // import { HighchartsChartComponent } from 'highcharts-angular';
 import { HighchartsChartModule } from 'highcharts-angular';
@@ -49,7 +50,7 @@ import {  NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
     NgbDatepickerModule,
     FormsModule
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent],
   // schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
