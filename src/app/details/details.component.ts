@@ -11,7 +11,7 @@ import { inject, TemplateRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { interval } from 'rxjs';
+
 
 indicators(Highcharts);
 volumeByPrice(Highcharts);
@@ -146,6 +146,7 @@ export class DetailsComponent implements OnInit {
 
   buyStock(value:number){
     this.stockBought=true;
+    this.isBought=true;
         setTimeout(async() => {
           this.stockBought=false;
         }, 4000);
@@ -170,6 +171,7 @@ export class DetailsComponent implements OnInit {
     this.http.post('http://localhost:3000/portfolio/buyStock2',data).subscribe({
       next: (response) => {
         console.log(response);
+        this.getBalance();
         // if(response)
         // {
         //   this.isBought=true
@@ -211,6 +213,8 @@ export class DetailsComponent implements OnInit {
     this.http.post('http://localhost:3000/portfolio/sellStock',data).subscribe({
       next: (response) => {
         console.log(response);
+        this.getBalance();
+        
         
         
       },
@@ -235,27 +239,11 @@ export class DetailsComponent implements OnInit {
     this.getBalance();
 
 
-    interval(15000).subscribe(()=>{
-      this.refreshQuote();
-    })
+    
   }
   
-  responseDataQuoteRefresh:any;
-  refreshQuote(){
-    this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
-      .subscribe({
-        next: (response) => {
-          // console.log(response);
-          
-
-          this.responseDataQuoteRefresh = response;
-          // this.detailsService.setData('quote', this.responseDataQuote);
-        },
-        error: (error) => {
-          console.error('Error:', error);
-        }
-      });
-  }
+  
+  
 
   isAddedToWatchlistFunc(value:string) {
     this.stocksInWatchlist = []
@@ -387,6 +375,9 @@ export class DetailsComponent implements OnInit {
     },
     title: {
       text: "Hourly Price Variation"
+    },
+    time:{
+      timezoneOffset:420
     },
 
     xAxis: {
@@ -605,7 +596,7 @@ export class DetailsComponent implements OnInit {
     // console.log(date1);
     // console.log(currentDate);
     const diff = Math.abs(currentDate.getTime() - date1.getTime());
-    if (diff / 1000 > 60) {
+    if (diff / 1000 > 180) {
       // console.log(diff)
       return false;
     }

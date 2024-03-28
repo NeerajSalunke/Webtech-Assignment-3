@@ -1,11 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { forkJoin } from 'rxjs';
+import { forkJoin, interval } from 'rxjs';
 import { Router } from '@angular/router';
 import { DetailsService } from 'src/services/details.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { debounceTime, tap } from 'rxjs/operators';
+
+
 
 
 @Component({
@@ -140,6 +142,30 @@ export class SearchFormComponent implements OnInit {
     this.isFetching = false;
   }
 
+  refreshQuote(){
+    this.fetchQuote();
+
+    interval(15000).subscribe(()=>{
+      this.fetchQuote();
+    })
+  }
+
+  fetchQuote(){
+    this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
+      .subscribe({
+        next: (response) => {
+          // console.log(response);
+          
+
+          this.responseDataQuote = response;
+          this.detailsService.setData('quote', this.responseDataQuote);
+        },
+        error: (error) => {
+          console.error('Error:', error);
+        }
+      });
+  }
+
   onSubmit() {
     this.isLoading = true;
     this.newTicker=true;
@@ -181,19 +207,21 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-    this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
-      .subscribe({
-        next: (response) => {
-          // console.log(response);
+      this.refreshQuote();
+
+    // this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
+    //   .subscribe({
+    //     next: (response) => {
+    //       // console.log(response);
           
 
-          this.responseDataQuote = response;
-          this.detailsService.setData('quote', this.responseDataQuote);
-        },
-        error: (error) => {
-          console.error('Error:', error);
-        }
-      });
+    //       this.responseDataQuote = response;
+    //       this.detailsService.setData('quote', this.responseDataQuote);
+    //     },
+    //     error: (error) => {
+    //       console.error('Error:', error);
+    //     }
+    //   });
 
     this.http.get(`http://localhost:3000/search/peers?ticker=${this.tickerSymbol}`)
       .subscribe({
@@ -284,7 +312,7 @@ export class SearchFormComponent implements OnInit {
   next: (response) => {
     // Filter out items with both image URL and headline
     const filteredResponse = response.filter(item => item.image && item.headline);
-    console.log("Filtered response toh dekho",filteredResponse);
+    // console.log("Filtered response toh dekho",filteredResponse);
 
     // Determine the length of the filtered response array
     const responseLength = filteredResponse.length;
@@ -306,8 +334,8 @@ export class SearchFormComponent implements OnInit {
 
     this.detailsService.setData('news1', this.news1);
     this.detailsService.setData('news2', this.news2);
-    console.log("News 1 dekho - ",this.news1);
-    console.log("News2 dekho",this.news2);
+    // console.log("News 1 dekho - ",this.news1);
+    // console.log("News2 dekho",this.news2);
   },
   error: (error) => {
     console.error('Error:', error);
