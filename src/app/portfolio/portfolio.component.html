@@ -1,4 +1,10 @@
 <div class="container">
+    <ngb-alert style="margin-top: 5px; text-align: center;" #selfClosingAlert *ngIf="stockBought" type="success">
+        {{selectedPortfolio.ticker}} bought successfully.
+    </ngb-alert>
+    <ngb-alert style="margin-top: 5px; text-align: center;" #selfClosingAlert *ngIf="stockSold" type="danger">
+        {{selectedPortfolio.ticker}} sold successfully.
+    </ngb-alert>
     <p style="font-size: 30px; font-weight: bold;">My Portfolio</p>
     <p>Money in Wallet: ${{this.balance | number:'1.2-2'}}</p>
     <div *ngIf="isLoading; else portFolioContent">
@@ -66,12 +72,13 @@
                         <input type="text" id="quantity" name="quantity" [(ngModel)]="quantity">
                     </div>
                 </div>
+                <div *ngIf="(quantity*selectedPortfolio.price)>balance" style="color: red;">Not enough money in wallet!</div>
             </form>
         </div>
         <div class="modal-footer">
             <div style="margin-left: 0px;">Total: {{(quantity*selectedPortfolio.price) | number:'1.2-2'}}</div>
             <!-- <button type="button" class="btn btn-success" (click)="modal.close('Save click')">Buy</button> -->
-            <button type="button" class="btn btn-success" (click)="buyStock(balance-(quantity*selectedPortfolio.price));modal.close('Save click')">Buy</button>
+            <button type="button" class="btn btn-success" (click)="buyStock(balance-(quantity*selectedPortfolio.price));modal.close('Save click')" [disabled]="(quantity*selectedPortfolio.price)>balance || quantity==0">Buy</button>
         </div>
     </ng-template>
     <ng-template #sellModal let-modal>
@@ -89,12 +96,13 @@
                         <input type="text" id="quantity" name="quantity" [(ngModel)]="quantity">
                     </div>
                 </div>
+                <div *ngIf="(selectedPortfolio.quantity)<quantity" style="color: red;">You cannot sell the stocks that you don't have!</div>
             </form>
         </div>
         <div class="modal-footer">
             <div style="margin-left: 0px;">Total: {{(quantity*selectedPortfolio.price) | number:'1.2-2'}}</div>
             <!-- <button type="button" class="btn btn-success" (click)="modal.close('Save click')">Buy</button> -->
-            <button type="button" class="btn btn-success" (click)="sellStock(+balance+(quantity*selectedPortfolio.price));modal.close('Save click')">Sell</button>
+            <button type="button" class="btn btn-success" (click)="sellStock(+balance+(quantity*selectedPortfolio.price));modal.close('Save click')" [disabled]="(selectedPortfolio.quantity)<quantity || quantity==0">Sell</button>
         </div>
     </ng-template>
 </div>

@@ -5,6 +5,9 @@
     <ngb-alert style="margin-top: 5px; text-align: center;" #selfClosingAlert *ngIf="stockBought" type="success">
         {{responseDataProfile.ticker}} bought successfully.
     </ngb-alert>
+    <ngb-alert style="margin-top: 5px; text-align: center;" #selfClosingAlert *ngIf="stockSold" type="danger">
+        {{responseDataProfile.ticker}} Sold successfully.
+    </ngb-alert>
     <div *ngIf="isLoading; else detailsLoaded">
         <mat-spinner class="mx-auto"></mat-spinner>
     </div>
@@ -33,7 +36,7 @@
                 <p>{{responseDataProfile.exchange}}</p>
                 <div>
                     <button type="button" class="btn btn-success m-1" (click)="open(buyModal)">Buy</button>
-                    <button type="button" class="btn btn-danger m-1" *ngIf="isBought">Sell</button>
+                    <button type="button" class="btn btn-danger m-1" *ngIf="isBought" (click)="open(sellModal)">Sell</button>
                 </div>
             </div>
             <div class="logo col text-center">
@@ -108,7 +111,9 @@
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab label="Top News"> Content 2 </mat-tab>
+            <mat-tab label="Top News"> 
+                    
+            </mat-tab>
             <mat-tab label="Charts">
 
                 <div class="row" *ngIf="responseDataPolyTwoYr">
@@ -178,12 +183,37 @@
                         <input type="text" id="quantity" name="quantity" [(ngModel)]="quantity">
                     </div>
                 </div>
+                <div *ngIf="(quantity*responseDataQuote.c)>balance" style="color: red;">Not enough money in wallet!</div>
             </form>
         </div>
         <div class="modal-footer">
             <div style="margin-left: 0px;">Total: {{(quantity*responseDataQuote.c) | number:'1.2-2'}}</div>
             <!-- <button type="button" class="btn btn-success" (click)="modal.close('Save click')">Buy</button> -->
-            <button type="button" class="btn btn-success" (click)="buyStock(balance-(quantity*responseDataQuote.c));modal.close('Save click')">Buy</button>
+            <button type="button" class="btn btn-success" (click)="buyStock(balance-(quantity*responseDataQuote.c));modal.close('Save click')" [disabled]="(quantity*responseDataQuote.c)>balance || quantity==0">Buy</button>
+        </div>
+    </ng-template>
+    <ng-template #sellModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{responseDataProfile.ticker}}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div>Current Price {{responseDataQuote.c}}</div>
+                <div>Money in Wallet: ${{balance | number:'1.2-2'}}</div>
+                <div class="mb-3">
+                    <label for="quantity">Quantity:</label>
+                    <div class="input-group">
+                        <input type="text" id="quantity" name="quantity" [(ngModel)]="quantity">
+                    </div>
+                </div>
+                <div *ngIf="(quantityFromDB)<quantity" style="color: red;">You cannot sell the stocks that you don't have!</div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div style="margin-left: 0px;">Total: {{(quantity*responseDataQuote.c) | number:'1.2-2'}}</div>
+            <!-- <button type="button" class="btn btn-success" (click)="modal.close('Save click')">Buy</button> -->
+            <button type="button" class="btn btn-success" (click)="sellStock(+balance+(quantity*responseDataQuote.c));modal.close('Save click')" [disabled]="(quantityFromDB)<quantity || quantity==0">Sell</button>
         </div>
     </ng-template>
 </div>

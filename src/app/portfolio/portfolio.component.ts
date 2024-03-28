@@ -20,6 +20,7 @@ export class PortfolioComponent {
   selectedPortfolio:any;
   quantity:number=0;
   stockBought:boolean=false;
+  stockSold:boolean=false;
 
  
 
@@ -51,6 +52,7 @@ export class PortfolioComponent {
   
 
   getPortfolio() {
+    this.portfolioList=[]
     this.http.get('http://localhost:3000/portfolio/getPortfolio').subscribe({
       next: (response: any) => {
         console.log(response)
@@ -135,7 +137,8 @@ export class PortfolioComponent {
     })
 
     const data = {
-      ticker: this.tickerSymbol,
+      // ticker: this.tickerSymbol,
+      ticker: this.selectedPortfolio.ticker,
       name:this.selectedPortfolio.name,
       quantity:this.quantity,
       price:this.selectedPortfolio.price
@@ -146,6 +149,9 @@ export class PortfolioComponent {
     this.http.post('http://localhost:3000/portfolio/buyStock2',data).subscribe({
       next: (response) => {
         console.log(response);
+        console.log("Message inside post request buyStock2")
+        this.getPortfolio();
+        this.getBalance();
         // if(response)
         // {
         //   this.isBought=true
@@ -163,7 +169,10 @@ export class PortfolioComponent {
   sellStock(value:number){
     // value=parseFloat(value);
     console.log("Value inside buyStock in portfolio comp:",value);
-
+    this.stockSold=true;
+        setTimeout(async() => {
+          this.stockSold=false;
+        }, 4000);
     // to update balance
     this.http.get(`http://localhost:3000/portfolio/buyStock1?ticker=${value}`).subscribe({
       next:(response:any)=>{
@@ -174,7 +183,8 @@ export class PortfolioComponent {
     })
 
     const data = {
-      ticker: this.tickerSymbol,
+      // ticker: this.tickerSymbol,
+      ticker: this.selectedPortfolio.ticker,
       name:this.selectedPortfolio.name,
       quantity:this.quantity,
       price:this.selectedPortfolio.price
@@ -185,8 +195,8 @@ export class PortfolioComponent {
     this.http.post('http://localhost:3000/portfolio/sellStock',data).subscribe({
       next: (response) => {
         console.log(response);
-        
-        
+        this.getPortfolio();
+        this.getBalance();
       },
       error: (error) => {
         console.error('Error:', error);

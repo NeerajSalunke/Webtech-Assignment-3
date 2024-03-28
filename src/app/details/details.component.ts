@@ -93,6 +93,7 @@ export class DetailsComponent implements OnInit {
 		}
 	}
   balance:any;
+  quantityFromDB:number=0;
   getBalance(){
     this.http.get('http://localhost:3000/portfolio/getBalance').subscribe({
       next:(response:any)=>{
@@ -107,6 +108,8 @@ export class DetailsComponent implements OnInit {
       next: (response:any) => {
         console.log("Received ",response);
         this.isBought = response.exists;
+        this.quantityFromDB = response.quantity;
+        console.log(this.quantityFromDB)
         if (this.isBought) {
           console.log("Stock is already bought");
         } else {
@@ -157,6 +160,46 @@ export class DetailsComponent implements OnInit {
         console.error('Error:', error);
       }
     })
+  }
+
+  stockSold:boolean=false;
+  sellStock(value:number){
+    // value=parseFloat(value);
+    console.log("Value inside buyStock in portfolio comp:",value);
+    this.stockSold=true;
+        setTimeout(async() => {
+          this.stockSold=false;
+        }, 4000);
+    // to update balance
+    this.http.get(`http://localhost:3000/portfolio/buyStock1?ticker=${value}`).subscribe({
+      next:(response:any)=>{
+        console.log(response)
+        // this.balance=response[0].balance
+        // console.log(this.balance)
+      }
+    })
+
+    const data = {
+      ticker: this.tickerSymbol,
+      name:this.responseDataProfile.name,
+      quantity:this.quantity,
+      price:this.responseDataQuote.c
+    }
+    console.log(data);
+
+    // to update portfolio on the mongodb
+    this.http.post('http://localhost:3000/portfolio/sellStock',data).subscribe({
+      next: (response) => {
+        console.log(response);
+        
+        
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      }
+    })
+
+
   }
 
   ngOnInit(): void {

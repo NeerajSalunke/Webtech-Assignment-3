@@ -10,7 +10,8 @@ input:focus{
 }
 
 .searchForm{
-    width: 450px;
+    /* width: 450px; */
+    max-width: 450px;
     margin:auto auto;
 }
 
