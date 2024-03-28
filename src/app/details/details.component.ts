@@ -11,6 +11,7 @@ import { inject, TemplateRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { interval } from 'rxjs';
 
 indicators(Highcharts);
 volumeByPrice(Highcharts);
@@ -232,8 +233,30 @@ export class DetailsComponent implements OnInit {
     this.isAddedToWatchlistFunc(this.tickerSymbol);
     this.isAddedToWatchlist=this.detailsService.getData('isAddedToWl');
     this.getBalance();
+
+
+    interval(15000).subscribe(()=>{
+      this.refreshQuote();
+    })
   }
- 
+  
+  responseDataQuoteRefresh:any;
+  refreshQuote(){
+    this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
+      .subscribe({
+        next: (response) => {
+          // console.log(response);
+          
+
+          this.responseDataQuoteRefresh = response;
+          // this.detailsService.setData('quote', this.responseDataQuote);
+        },
+        error: (error) => {
+          console.error('Error:', error);
+        }
+      });
+  }
+
   isAddedToWatchlistFunc(value:string) {
     this.stocksInWatchlist = []
     this.http.get('http://localhost:3000/watchlist/getStock').subscribe({
