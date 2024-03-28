@@ -397,10 +397,11 @@ export class DetailsComponent implements OnInit {
     chart: {
       type: "column",
       backgroundColor: '#f5f5f5',
-      scrollablePlotArea: {
-        minWidth: 350,
-        scrollPositionX: 1
-    }
+      // width:null,
+    //   scrollablePlotArea: {
+    //     minWidth: 350,
+    //     scrollPositionX: 1
+    // }
     },
 
     xAxis: {
@@ -447,7 +448,8 @@ export class DetailsComponent implements OnInit {
     }, {
       name: 'strongSell',
       data: this.strongSellArray,
-    }] as Highcharts.SeriesOptionsType[]
+    }] as Highcharts.SeriesOptionsType[],
+   
   }
 
   splineChart: Highcharts.Options = {

@@ -123,7 +123,7 @@
             <mat-tab label="Top News">
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-6 col-xl-6" *ngIf="news1">
+                        <div class="col-sm-12 col-lg-6 col-xl-6" *ngIf="news1">
                             <ng-container *ngFor="let data of news1; let i = index">
                                 <div class="row" style="padding-right: 10px; cursor: pointer;">
                                     <ng-template #content let-modal>
@@ -190,10 +190,10 @@
 
                                     <div (click)="open(content)" class="container">
                                         <div class="row"
-                                            style=" height: 80px; margin-top: 20px; border-radius: 5px; border: 1px solid black;">
-                                            <div class="col-lg-3 col-xl-3" style="padding-top: 6px;">
-                                                <img style="margin-top: auto; border-radius: 5px; margin-bottom: auto; width: 100%; align-content: center; align-items: center; justify-content: center; text-align: center;"
-                                                    [src]="data.image" alt="">
+                                            style="min-height: 80px; margin-top: 20px; border-radius: 5px; border: 1px solid black;">
+                                            <div class="col-lg-3 col-xl-3">
+                                                <img style="margin-top: 5px; border-radius: 5px; margin-bottom: 5px; width: 100%; align-content: center; align-items: center; justify-content: center; text-align: center;"
+                                                    [src]="data.image" alt="" class="w-sm-100 w-md-100 w-lg-20 w-xl-20 w-xxl-20">
                                             </div>
                                             <div style="margin-top: auto; align-content: center; margin-bottom: auto; justify-content: center; vertical-align: middle; align-items: center; text-align: center; padding-left: 5px;"
                                                 class="col-lg-9 col-xl-9">
@@ -208,7 +208,7 @@
                             </ng-container>
 
                         </div>
-                        <div class="col-lg-6 col-xl-6" *ngIf="news2">
+                        <div class="col-sm-12 col-lg-6 col-xl-6" *ngIf="news2">
                             <ng-container *ngFor="let data of news2; let i = index">
                                 <div class="row" style="padding-right: 10px; cursor: pointer;">
                                     <ng-template #content let-modal>
@@ -275,10 +275,10 @@
 
                                     <div (click)="open(content)" class="container">
                                         <div class="row"
-                                            style=" height: 80px; margin-top: 20px; border-radius: 5px; border: 1px solid black;">
-                                            <div class="col-lg-3 col-xl-3" style="padding-top: 6px;">
-                                                <img style="margin-top: auto; border-radius: 5px; margin-bottom: auto; width: 100%; align-content: center; align-items: center; justify-content: center; text-align: center;"
-                                                    [src]="data.image" alt="">
+                                            style="min-height: 80px; margin-top: 20px; border-radius: 5px; border: 1px solid black;">
+                                            <div class="col-lg-3 col-xl-3">
+                                                <img style="margin-top: 5px; border-radius: 5px; margin-bottom: 5px; width: 100%; align-content: center; align-items: center; justify-content: center; text-align: center;"
+                                                    [src]="data.image" alt="" class="w-sm-100 w-md-100 w-lg-20 w-xl-20">
                                             </div>
                                             <div style="margin-top: auto; align-content: center; margin-bottom: auto; justify-content: center; vertical-align: middle; align-items: center; text-align: center; padding-left: 5px;"
                                                 class="col-lg-9 col-xl-9">
