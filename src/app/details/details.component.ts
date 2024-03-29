@@ -323,7 +323,7 @@ export class DetailsComponent implements OnInit {
 
   displayHourlyStockPrice() {
     // console.log(this.responseDataPolyHour);
-
+    if(this.responseDataPolyHour.resultsCount==0) return;
 
     this.responseDataPolyHour.results.forEach((element: { c: number, t: number }) => {
       // this.stockPrices.push(element.c);

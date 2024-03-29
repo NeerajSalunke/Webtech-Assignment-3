@@ -66,7 +66,7 @@ export class SearchFormComponent implements OnInit {
     // public searchForm: FormGroup
   ) { }
 
-
+  BASE_URL:any = 'http://localhost:3000';
 
   ngOnInit(): void {
     this.searchForm = this.formBuilder.group({ ticker: '' });
@@ -98,7 +98,7 @@ export class SearchFormComponent implements OnInit {
     ).subscribe(value => {
       if (this.searchForm.value.ticker != '') {
         this.isFetching = true;
-        this.http.get(`http://localhost:3000/search/autocomplete?ticker=${value}`)
+        this.http.get(`${this.BASE_URL}/search/autocomplete?ticker=${value}`)
           .subscribe({
             next: (response) => {
               // console.log(response);
@@ -159,7 +159,7 @@ export class SearchFormComponent implements OnInit {
   }
 
   fetchQuote() {
-    this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
+    this.http.get(`${this.BASE_URL}/search/quote?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // console.log(response);
@@ -194,7 +194,7 @@ export class SearchFormComponent implements OnInit {
 
     this.router.navigate(['/search/', this.tickerSymbol]);
 
-    this.http.get(`http://localhost:3000/search/profile?ticker=${this.tickerSymbol}`)
+    this.http.get(`${this.BASE_URL}/search/profile?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // console.log(response);
@@ -216,7 +216,7 @@ export class SearchFormComponent implements OnInit {
       });
 
     // this.refreshQuote();
-    this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
+    this.http.get(`${this.BASE_URL}/search/quote?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // console.log(response);
@@ -231,10 +231,11 @@ export class SearchFormComponent implements OnInit {
         }
       });
     interval(15000).subscribe(() => {
-      this.http.get(`http://localhost:3000/search/quote?ticker=${this.detailsService.getData('ticker')}`)
+      this.http.get(`${this.BASE_URL}/search/quote?ticker=${this.detailsService.getData('ticker')}`)
         .subscribe({
           next: (response) => {
             // console.log(response);
+            console.log("Running every 15 sec!")
 
 
             this.responseDataQuote = response;
@@ -261,7 +262,7 @@ export class SearchFormComponent implements OnInit {
     //     }
     //   });
 
-    this.http.get(`http://localhost:3000/search/peers?ticker=${this.tickerSymbol}`)
+    this.http.get(`${this.BASE_URL}/search/peers?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // console.log(response);
@@ -275,7 +276,7 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-    this.http.get(`http://localhost:3000/search/insights/insiderSentiments?ticker=${this.tickerSymbol}`)
+    this.http.get(`${this.BASE_URL}/search/insights/insiderSentiments?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // console.log(response);
@@ -288,7 +289,7 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-    this.http.get(`http://localhost:3000/search/polygonHourly?ticker=${this.tickerSymbol}`)
+    this.http.get(`${this.BASE_URL}/search/polygonHourly?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // this.newTicker=true;
@@ -314,7 +315,7 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-    this.http.get(`http://localhost:3000/search/recTrends?ticker=${this.tickerSymbol}`)
+    this.http.get(`${this.BASE_URL}/search/recTrends?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // this.newTicker=true;
@@ -328,7 +329,7 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-    this.http.get(`http://localhost:3000/search/companyEarnings?ticker=${this.tickerSymbol}`)
+    this.http.get(`${this.BASE_URL}/search/companyEarnings?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // this.newTicker=true;
@@ -344,7 +345,7 @@ export class SearchFormComponent implements OnInit {
 
 
 
-    this.http.get(`http://localhost:3000/search/polygonTwoYr?ticker=${this.tickerSymbol}`)
+    this.http.get(`${this.BASE_URL}/search/polygonTwoYr?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // this.newTicker=true;
@@ -370,7 +371,7 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-    this.http.get<any[]>(`http://localhost:3000/search/top_news?ticker=${this.tickerSymbol}`).subscribe({
+    this.http.get<any[]>(`${this.BASE_URL}/search/top_news?ticker=${this.tickerSymbol}`).subscribe({
       next: (response) => {
         // Filter out items with both image URL and headline
         const filteredResponse = response.filter(item => item.image && item.headline);
