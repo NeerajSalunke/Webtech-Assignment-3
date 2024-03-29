@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { DetailsService } from 'src/services/details.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { debounceTime, tap } from 'rxjs/operators';
+import { Output, EventEmitter } from '@angular/core';
 
 
 
@@ -36,17 +37,26 @@ export class SearchFormComponent implements OnInit {
   news1: any;
   news2: any;
 
-  @Input() searchPeer!: (peer: string) => void;
-
+  // @Input() searchPeer!: (peer: string) => void;
+  // @Output() searchSubmitted: EventEmitter<string> = new EventEmitter<string>();
+  // listenForSearchSubmit() {
+  //   this.searchSubmitted.subscribe((peer: string) => {
+  //     this.clearAll();
+  //     this.searchForm.controls['ticker'].setValue(peer);
+  //     this.onSubmit();
+  //   });
+  // }
 
 
   // currentTab:string='summary';
 
 
   isLoading: boolean = false;
-  newTicker:boolean=false;
-  isInputEmpty:boolean=false;
-  invalidTicker:boolean=false;
+  newTicker: boolean = false;
+  isInputEmpty: boolean = false;
+  invalidTicker: boolean = false;
+
+  lineColor: string = '';
 
   constructor(
     public formBuilder: FormBuilder,
@@ -61,8 +71,7 @@ export class SearchFormComponent implements OnInit {
   ngOnInit(): void {
     this.searchForm = this.formBuilder.group({ ticker: '' });
     // console.log(this.searchForm);
-    if(!this.newTicker)
-    {
+    if (!this.newTicker) {
       this.responseDataProfile = this.detailsService.getData('profile');
       this.responseDataQuote = this.detailsService.getData('quote');
       this.responseDataPeers = this.detailsService.getData('peers');
@@ -81,14 +90,13 @@ export class SearchFormComponent implements OnInit {
       }
     }
 
-    
-    
+    console.log("from ngoninit in searchform", this.tickerSymbol);
+
 
     this.searchForm.get('ticker')?.valueChanges.pipe(
       debounceTime(300)
     ).subscribe(value => {
-      if(this.searchForm.value.ticker!='')
-      {
+      if (this.searchForm.value.ticker != '') {
         this.isFetching = true;
         this.http.get(`http://localhost:3000/search/autocomplete?ticker=${value}`)
           .subscribe({
@@ -96,7 +104,7 @@ export class SearchFormComponent implements OnInit {
               // console.log(response);
               this.filterAutocomplete(response);
               // this.options = response;
-  
+
               // this.detailsService.setData('profile', this.responseDataProfile);
               // this.detailsService.setData('ticker', this.tickerSymbol);
             },
@@ -112,21 +120,21 @@ export class SearchFormComponent implements OnInit {
 
 
   // onInputChange(value: string) {
-    // this.isFetching=true;
-    // this.http.get(`http://localhost:3000/search/autocomplete?ticker=${value}`)
-    //   .subscribe({
-    //     next: (response) => {
-    //       // console.log(response);
-    //       this.iterateAutocomplete(response);
-    //       // this.options = response;
+  // this.isFetching=true;
+  // this.http.get(`http://localhost:3000/search/autocomplete?ticker=${value}`)
+  //   .subscribe({
+  //     next: (response) => {
+  //       // console.log(response);
+  //       this.iterateAutocomplete(response);
+  //       // this.options = response;
 
-    //       // this.detailsService.setData('profile', this.responseDataProfile);
-    //       // this.detailsService.setData('ticker', this.tickerSymbol);
-    //     },
-    //     error: (error) => {
-    //       console.error('Error:', error);
-    //     }
-    //   });
+  //       // this.detailsService.setData('profile', this.responseDataProfile);
+  //       // this.detailsService.setData('ticker', this.tickerSymbol);
+  //     },
+  //     error: (error) => {
+  //       console.error('Error:', error);
+  //     }
+  //   });
   // }
 
   filterAutocomplete(response: any) {
@@ -142,23 +150,24 @@ export class SearchFormComponent implements OnInit {
     this.isFetching = false;
   }
 
-  refreshQuote(){
+  refreshQuote() {
     this.fetchQuote();
 
-    interval(15000).subscribe(()=>{
-      this.fetchQuote();
-    })
+    // interval(15000).subscribe(()=>{
+    //   this.fetchQuote();
+    // })
   }
 
-  fetchQuote(){
+  fetchQuote() {
     this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // console.log(response);
-          
+
 
           this.responseDataQuote = response;
           this.detailsService.setData('quote', this.responseDataQuote);
+
         },
         error: (error) => {
           console.error('Error:', error);
@@ -168,13 +177,12 @@ export class SearchFormComponent implements OnInit {
 
   onSubmit() {
     this.isLoading = true;
-    this.newTicker=true;
-    this.isInputEmpty=false;
-    this.invalidTicker=false;
-    this.tickerSymbol = this.searchForm.value.ticker;
-    if(this.tickerSymbol=='')
-    {
-      this.isInputEmpty=true;
+    this.newTicker = true;
+    this.isInputEmpty = false;
+    this.invalidTicker = false;
+    this.tickerSymbol = this.searchForm.value.ticker.toUpperCase();
+    if (this.tickerSymbol == '') {
+      this.isInputEmpty = true;
       return;
     }
     // console.log(tickerSymbol);
@@ -190,9 +198,8 @@ export class SearchFormComponent implements OnInit {
       .subscribe({
         next: (response) => {
           // console.log(response);
-          if(Object.keys(response).length===0)
-          {
-            this.invalidTicker=true;
+          if (Object.keys(response).length === 0) {
+            this.invalidTicker = true;
             console.log("Invalid Ticker")
             return;
           }
@@ -200,6 +207,7 @@ export class SearchFormComponent implements OnInit {
           this.responseDataProfile = response;
           this.detailsService.setData('profile', this.responseDataProfile);
           this.detailsService.setData('ticker', this.tickerSymbol);
+          // this.isLoading=false;
         },
         error: (error) => {
           // this.isLoading=false;
@@ -207,13 +215,43 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-      this.refreshQuote();
+    // this.refreshQuote();
+    this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
+      .subscribe({
+        next: (response) => {
+          // console.log(response);
+
+
+          this.responseDataQuote = response;
+          this.detailsService.setData('quote', this.responseDataQuote);
+
+        },
+        error: (error) => {
+          console.error('Error:', error);
+        }
+      });
+    interval(15000).subscribe(() => {
+      this.http.get(`http://localhost:3000/search/quote?ticker=${this.detailsService.getData('ticker')}`)
+        .subscribe({
+          next: (response) => {
+            // console.log(response);
+
+
+            this.responseDataQuote = response;
+            this.detailsService.setData('quote', this.responseDataQuote);
+
+          },
+          error: (error) => {
+            console.error('Error:', error);
+          }
+        });
+    })
 
     // this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
     //   .subscribe({
     //     next: (response) => {
     //       // console.log(response);
-          
+
 
     //       this.responseDataQuote = response;
     //       this.detailsService.setData('quote', this.responseDataQuote);
@@ -230,7 +268,7 @@ export class SearchFormComponent implements OnInit {
           this.responseDataPeers = response;
           this.detailsService.setData('peers', this.responseDataPeers);
           // this.isLoading = false;
-          this.newTicker=false;
+          this.newTicker = false;
         },
         error: (error) => {
           console.error('Error:', error);
@@ -257,7 +295,19 @@ export class SearchFormComponent implements OnInit {
           // console.log(response);
           this.responseDataPolyHour = response;
           this.detailsService.setData('polyHour', this.responseDataPolyHour);
-          this.isLoading=false;
+          // if(this.responseDataQuote.d<0) 
+          // {
+          //   this.lineColor='#cd3131'
+          //   this.detailsService.setData('lineColor', this.lineColor);
+          //   console.log("Red liene color",this.lineColor)
+          // }
+          // else 
+          // {
+          //   this.lineColor='#6a9952'
+          //   this.detailsService.setData('lineColor', this.lineColor);
+          //   console.log("Green liene color")
+          // }
+          // this.isLoading=false;
         },
         error: (error) => {
           console.error('Error:', error);
@@ -292,59 +342,71 @@ export class SearchFormComponent implements OnInit {
         }
       });
 
-      
+
 
     this.http.get(`http://localhost:3000/search/polygonTwoYr?ticker=${this.tickerSymbol}`)
       .subscribe({
         next: (response) => {
           // this.newTicker=true;
           // console.log(response);
+
+          if (this.responseDataQuote.d < 0) {
+            this.lineColor = '#cd3131'
+            this.detailsService.setData('lineColor', this.lineColor);
+            console.log("Red liene color", this.lineColor)
+          }
+          else {
+            this.lineColor = '#6a9952'
+            this.detailsService.setData('lineColor', this.lineColor);
+            console.log("Green liene color")
+          }
+
           this.responseDataPolyTwoYr = response;
           this.detailsService.setData('polyTwoYr', this.responseDataPolyTwoYr);
-          // this.isLoading=false;
+          this.isLoading = false;
         },
         error: (error) => {
           console.error('Error:', error);
         }
       });
 
-      this.http.get<any[]>(`http://localhost:3000/search/top_news?ticker=${this.tickerSymbol}`).subscribe({
-  next: (response) => {
-    // Filter out items with both image URL and headline
-    const filteredResponse = response.filter(item => item.image && item.headline);
-    // console.log("Filtered response toh dekho",filteredResponse);
+    this.http.get<any[]>(`http://localhost:3000/search/top_news?ticker=${this.tickerSymbol}`).subscribe({
+      next: (response) => {
+        // Filter out items with both image URL and headline
+        const filteredResponse = response.filter(item => item.image && item.headline);
+        // console.log("Filtered response toh dekho",filteredResponse);
 
-    // Determine the length of the filtered response array
-    const responseLength = filteredResponse.length;
+        // Determine the length of the filtered response array
+        const responseLength = filteredResponse.length;
 
-    if (responseLength >= 20) {
-      // If the filtered response has 20 or more items, take the first 20
-      this.news1 = filteredResponse.slice(0, 10);
-      this.news2 = filteredResponse.slice(10, 20);
-    } else if (responseLength > 0) {
-      // If the filtered response has fewer than 20 items but more than 0, divide them into two halves
-      const halfLength = Math.ceil(responseLength / 2);
-      this.news1 = filteredResponse.slice(0, halfLength);
-      this.news2 = filteredResponse.slice(halfLength);
-    } else {
-      // If there are no items with both image URL and headline, set both news arrays to empty
-      this.news1 = [];
-      this.news2 = [];
-    }
+        if (responseLength >= 20) {
+          // If the filtered response has 20 or more items, take the first 20
+          this.news1 = filteredResponse.slice(0, 10);
+          this.news2 = filteredResponse.slice(10, 20);
+        } else if (responseLength > 0) {
+          // If the filtered response has fewer than 20 items but more than 0, divide them into two halves
+          const halfLength = Math.ceil(responseLength / 2);
+          this.news1 = filteredResponse.slice(0, halfLength);
+          this.news2 = filteredResponse.slice(halfLength);
+        } else {
+          // If there are no items with both image URL and headline, set both news arrays to empty
+          this.news1 = [];
+          this.news2 = [];
+        }
 
-    this.detailsService.setData('news1', this.news1);
-    this.detailsService.setData('news2', this.news2);
-    // console.log("News 1 dekho - ",this.news1);
-    // console.log("News2 dekho",this.news2);
-  },
-  error: (error) => {
-    console.error('Error:', error);
+        this.detailsService.setData('news1', this.news1);
+        this.detailsService.setData('news2', this.news2);
+        // console.log("News 1 dekho - ",this.news1);
+        // console.log("News2 dekho",this.news2);
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      }
+    });
+
   }
-});
-      
-  }
 
-  
+
 
   // showTab(clickedTab:string)
   // {
@@ -365,16 +427,17 @@ export class SearchFormComponent implements OnInit {
     this.searchForm.controls['ticker'].setValue('');
     this.showDetailsComp = false;
     this.router.navigate(['/search/home']);
-    this.isInputEmpty=false;
-    this.invalidTicker=false;
+    this.isInputEmpty = false;
+    this.invalidTicker = false;
 
 
   }
-  onInputChange(event:Event){
+  onInputChange(event: Event) {
+    // this.listenForSearchSubmit();
     const target = event.target as HTMLInputElement;
     const value = target.value.trim();
     if (value === '') {
-        this.clearAll();
+      this.clearAll();
     }
   }
 }

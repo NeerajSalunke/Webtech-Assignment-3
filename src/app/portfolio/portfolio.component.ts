@@ -21,6 +21,7 @@ export class PortfolioComponent {
   quantity:number=0;
   stockBought:boolean=false;
   stockSold:boolean=false;
+  currentQuote:any=[];
 
  
 
@@ -49,6 +50,12 @@ export class PortfolioComponent {
     })
   }
 
+  getTextColor(n:number): string{
+    if(n<0) return 'red';
+    else if(n>0) return 'green';
+    else return 'black';
+  }
+
   
 
   getPortfolio() {
@@ -61,10 +68,19 @@ export class PortfolioComponent {
           this.isLoading=false;
         }
         response.forEach((element: { ticker: string, name: string, quantity: number, price:string }) => {
+
+          this.getQuote(element.ticker);
+          // setTimeout(()=>{
+          //   console.log(this.quote.c);
+          //   this.currentQuote.push(this.quote.c)
+
+          // },1000)
+
           this.portfolioList.push({
             ticker: element.ticker,
             name: element.name,
             quantity: element.quantity,
+            // quantity: this.quote.c,
             price:element.price
           })
           this.tickerSymbol = element.ticker;
@@ -76,15 +92,25 @@ export class PortfolioComponent {
 
   }
 
-  getQuote() {
-    this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
+  getLatestQuote(ticker:string): number{
+    const quoteObject = this.currentQuote.find((item:any) => item.ticker === ticker);
+    return quoteObject ? quoteObject.quote : 'N/A';
+  }
+
+  getQuote(ticker:string) {
+    // this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
+    this.http.get(`http://localhost:3000/search/quote?ticker=${ticker}`)
       .subscribe({
         next: (response) => {
           // console.log(response);
 
 
           this.quote = response;
-          this.isLoading = false;
+          console.log(this.quote.c);
+          this.currentQuote.push({
+            ticker:ticker,
+            quote:this.quote.c});
+          // this.isLoading = false;
           // this.detailsService.setData('quote', this.responseDataQuote);
         },
         error: (error) => {

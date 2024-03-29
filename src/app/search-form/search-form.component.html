@@ -5,6 +5,7 @@
             <h1>STOCK SEARCH</h1>
         </div>
     </div>
+    <!-- {{listenForSearchSubmit()}} -->
 
 
     <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
@@ -67,5 +68,6 @@
         [responseDataPolyHour]="responseDataPolyHour" [responseDataRecTrends]="responseDataRecTrends"
         [responseDataCompEarn]="responseDataCompEarn" [responseDataPolyTwoYr]="responseDataPolyTwoYr"
         [tickerSymbol]="tickerSymbol"
-        [news1]="news1" [news2]="news2"></app-details>
+        [news1]="news1" [news2]="news2"
+        ></app-details>
 </div>

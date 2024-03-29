@@ -91,7 +91,7 @@
             <mat-tab label="Summary">
                 <div class="row">
 
-                    <div class="col text-center">
+                    <div class="col-sm-12 col-md-12 col-lg-6 text-center">
                         <p><span style="font-weight: bold;">High Price: </span>{{responseDataQuote.h}}</p>
                         <p><span style="font-weight: bold;">Low Price: </span>{{responseDataQuote.l}}</p>
                         <p><span style="font-weight: bold;">Open Price: </span>{{responseDataQuote.o}}</p>
@@ -111,11 +111,11 @@
                             </ng-container>
                         </p>
                     </div>
-                    <div class="col" *ngIf="responseDataPolyHour">
+                    <div class="col-sm-12 col-md-12 col-lg-6" *ngIf="responseDataPolyHour">
                         {{displayHourlyStockPrice()}}
                         <highcharts-chart [Highcharts]="Highcharts" [constructorType]="chartConstructor"
                             [options]="lineChart" [(update)]="updateFlag" [oneToOne]="oneToOneFlag"
-                            [runOutsideAngular]="runOutsideAngular" style=" height: 300px;"></highcharts-chart>
+                            [runOutsideAngular]="runOutsideAngular" style="width: 100%;display: block;"></highcharts-chart>
                         <!-- {{this.stockPrices.splice(0)}} -->
                     </div>
                 </div>
@@ -313,45 +313,48 @@
 
             </mat-tab>
             <mat-tab label="Insights">
-                <p class="text-center" style="font-size: x-large;">Insider Sentiments</p>
-                <div class="row justify-content-center">
+                <div class="container">
+                    <p class="text-center" style="font-size: x-large;">Insider Sentiments</p>
+                    <div class="row justify-content-center">
+    
+                        <div class="container" id="tableDiv">
+                            <table class="table1 text-center">
+                                <tr>
+                                    <td style="font-weight: bold;">{{responseDataProfile.name}}</td>
+                                    <td style="font-weight: bold;">MSPR</td>
+                                    <td style="font-weight: bold;">Change</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Total</td>
+                                    <td>{{aggregateMSPR("t")}}</td>
+                                    <td>{{aggregateChange("t")}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Positive</td>
+                                    <td>{{aggregateMSPR("p")}}</td>
+                                    <td>{{aggregateChange("p")}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Negative</td>
+                                    <td>{{aggregateMSPR("n")}}</td>
+                                    <td>{{aggregateChange("n")}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-6" *ngIf="responseDataRecTrends">
+                            {{displayRecTren()}}
+                            <highcharts-chart [Highcharts]="Highcharts" [constructorType]="chartConstructor"
+                                [options]="columnChart" style="width: 100%;display: block;"></highcharts-chart>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-6" *ngIf="responseDataCompEarn">
+                            {{displayCompEarn()}}
+                            <highcharts-chart [Highcharts]="Highcharts" [constructorType]="chartConstructor"
+                                [options]="splineChart" style="width: 100%;display: block;"></highcharts-chart>
+                        </div>
+                    </div>
 
-                    <div class="container" id="tableDiv">
-                        <table class="table1 text-center">
-                            <tr>
-                                <td style="font-weight: bold;">{{responseDataProfile.name}}</td>
-                                <td style="font-weight: bold;">MSPR</td>
-                                <td style="font-weight: bold;">Change</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: bold;">Total</td>
-                                <td>{{aggregateMSPR("t")}}</td>
-                                <td>{{aggregateChange("t")}}</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: bold;">Positive</td>
-                                <td>{{aggregateMSPR("p")}}</td>
-                                <td>{{aggregateChange("p")}}</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: bold;">Negative</td>
-                                <td>{{aggregateMSPR("n")}}</td>
-                                <td>{{aggregateChange("n")}}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col" *ngIf="responseDataRecTrends">
-                        {{displayRecTren()}}
-                        <highcharts-chart [Highcharts]="Highcharts" [constructorType]="chartConstructor"
-                            [options]="columnChart"></highcharts-chart>
-                    </div>
-                    <div class="col" *ngIf="responseDataCompEarn">
-                        {{displayCompEarn()}}
-                        <highcharts-chart [Highcharts]="Highcharts" [constructorType]="chartConstructor"
-                            [options]="splineChart"></highcharts-chart>
-                    </div>
                 </div>
             </mat-tab>
         </mat-tab-group>

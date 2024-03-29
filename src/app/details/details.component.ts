@@ -11,6 +11,7 @@ import { inject, TemplateRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SearchFormComponent } from '../search-form/search-form.component';
 
 
 indicators(Highcharts);
@@ -33,6 +34,8 @@ export class DetailsComponent implements OnInit {
   @Input() isLoading: boolean = false;
   @Input() searchForm: any;
   @Input() onSubmit: any;
+  // @Input() lineColor:string='';
+  
 
   // for news
   @Input() news1: any;
@@ -46,7 +49,7 @@ export class DetailsComponent implements OnInit {
 
   // this.displayHourlyStockPrice();
 
-  @Output() peerClicked = new EventEmitter<string>();
+  // @Output() peerClicked = new EventEmitter<string>();
   stockPrices: any[] = [];
   xAxisRecTren: string[] = [];
   strongBuyArray: number[] = [];
@@ -70,11 +73,14 @@ export class DetailsComponent implements OnInit {
 
   quantity:number=0;
 
+  lineColor:string='';
+
   // chart: Highcharts.Chart | undefined;
   constructor(
     public http: HttpClient,
     private detailsService: DetailsService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private searchFormComponent: SearchFormComponent,
   ) { }
 
   encodeURL(text: string): string {
@@ -120,6 +126,7 @@ export class DetailsComponent implements OnInit {
         // console.log(response)
         this.balance=response[0].balance
         // console.log(this.balance)
+        
       }
     })
     var ticker=this.tickerSymbol
@@ -226,6 +233,7 @@ export class DetailsComponent implements OnInit {
 
   }
 
+  // color:string='';
   ngOnInit(): void {
     // this.stockPrices=[];
     // this.displayRecTren();
@@ -237,7 +245,11 @@ export class DetailsComponent implements OnInit {
     this.isAddedToWatchlistFunc(this.tickerSymbol);
     this.isAddedToWatchlist=this.detailsService.getData('isAddedToWl');
     this.getBalance();
-
+    this.lineColor=this.detailsService.getData('lineColor');
+    console.log("From ngOnInit in details comp",this.lineColor)
+    
+    
+    
 
     
   }
@@ -367,8 +379,11 @@ export class DetailsComponent implements OnInit {
     // console.log(this.volume);
   }
 
+  
+
   Highcharts: typeof Highcharts = Highcharts; // required
   chartConstructor: string = 'chart'; // optional string, defaults to 'chart'
+  // lineChart: Highcharts.Options = {}
   lineChart: Highcharts.Options = {
     chart: {
       backgroundColor: '#f5f5f5'
@@ -392,12 +407,22 @@ export class DetailsComponent implements OnInit {
       },
       opposite: true
     },
+    plotOptions:{
+      series:{
+        // color:this.lineColor,
+        color:this.detailsService.getData('lineColor'),
+        
+      }
+    },
     series: [{
       data: this.stockPrices,
       type: 'line'
     }] as Highcharts.SeriesOptionsType[]
-  }; // required
-  // chartCallback: Highcharts.ChartCallbackFunction = function (chart) { ... } // optional function, defaults to null
+  };
+
+  // chartCallback: Highcharts.ChartCallbackFunction = function (lineChart) {
+    
+  // }
   updateFlag: boolean = false; // optional boolean
   oneToOneFlag: boolean = true; // optional boolean, defaults to false
   runOutsideAngular: boolean = false; // optional boolean, defaults to false
@@ -604,8 +629,9 @@ export class DetailsComponent implements OnInit {
   }
 
   searchPeer(peer: string) {
-    this.searchForm.controls['ticker'].setValue(peer);
-    this.peerClicked.emit(peer);
+    // this.searchForm.controls['ticker'].setValue(peer);
+    // this.searchFormComponent.searchSubmitted.emit(peer);
+    // this.peerClicked.emit(peer);
     // this.onSubmit();
   }
 
