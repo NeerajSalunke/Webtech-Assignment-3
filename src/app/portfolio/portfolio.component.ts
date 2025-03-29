@@ -31,6 +31,8 @@ export class PortfolioComponent {
       // private detailsService: DetailsService,
     ) { }
 
+    BASE_URL:any = 'https://stocksearchangular1502-418801.wl.r.appspot.com';
+
     parseNumber(value:any):number{
       return parseFloat(value)
     }
@@ -41,7 +43,7 @@ export class PortfolioComponent {
     this.getPortfolio();
   }
   getBalance() {
-    this.http.get('http://localhost:3000/portfolio/getBalance').subscribe({
+    this.http.get(`${this.BASE_URL}/portfolio/getBalance`).subscribe({
       next: (response: any) => {
         // console.log(response)
         this.balance = response[0].balance
@@ -60,7 +62,7 @@ export class PortfolioComponent {
 
   getPortfolio() {
     this.portfolioList=[]
-    this.http.get('http://localhost:3000/portfolio/getPortfolio').subscribe({
+    this.http.get(`${this.BASE_URL}/portfolio/getPortfolio`).subscribe({
       next: (response: any) => {
         console.log(response)
         if(response.length==0)
@@ -99,7 +101,7 @@ export class PortfolioComponent {
 
   getQuote(ticker:string) {
     // this.http.get(`http://localhost:3000/search/quote?ticker=${this.tickerSymbol}`)
-    this.http.get(`http://localhost:3000/search/quote?ticker=${ticker}`)
+    this.http.get(`${this.BASE_URL}/search/quote?ticker=${ticker}`)
       .subscribe({
         next: (response) => {
           // console.log(response);
@@ -154,7 +156,7 @@ export class PortfolioComponent {
           this.stockBought=false;
         }, 4000);
     // to update balance
-    this.http.get(`http://localhost:3000/portfolio/buyStock1?ticker=${value}`).subscribe({
+    this.http.get(`${this.BASE_URL}/portfolio/buyStock1?ticker=${value}`).subscribe({
       next:(response:any)=>{
         console.log(response)
         // this.balance=response[0].balance
@@ -172,7 +174,7 @@ export class PortfolioComponent {
     console.log(data);
 
     // to update portfolio on the mongodb
-    this.http.post('http://localhost:3000/portfolio/buyStock2',data).subscribe({
+    this.http.post(`${this.BASE_URL}/portfolio/buyStock2`,data).subscribe({
       next: (response) => {
         console.log(response);
         console.log("Message inside post request buyStock2")
@@ -200,7 +202,7 @@ export class PortfolioComponent {
           this.stockSold=false;
         }, 4000);
     // to update balance
-    this.http.get(`http://localhost:3000/portfolio/buyStock1?ticker=${value}`).subscribe({
+    this.http.get(`${this.BASE_URL}/portfolio/buyStock1?ticker=${value}`).subscribe({
       next:(response:any)=>{
         console.log(response)
         // this.balance=response[0].balance
@@ -218,7 +220,7 @@ export class PortfolioComponent {
     console.log(data);
 
     // to update portfolio on the mongodb
-    this.http.post('http://localhost:3000/portfolio/sellStock',data).subscribe({
+    this.http.post(`${this.BASE_URL}/portfolio/sellStock`,data).subscribe({
       next: (response) => {
         console.log(response);
         this.getPortfolio();

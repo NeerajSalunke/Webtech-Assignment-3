@@ -3,6 +3,10 @@
         type="success">
         {{responseDataProfile.ticker}} added to Watchlist.
     </ngb-alert>
+    <ngb-alert style="margin-top: 5px; text-align: center;" #selfClosingAlert *ngIf="removedFromWlSuccessMsg"
+        type="danger">
+        {{responseDataProfile.ticker}} removed from Watchlist.
+    </ngb-alert>
     <ngb-alert style="margin-top: 5px; text-align: center;" #selfClosingAlert *ngIf="stockBought" type="success">
         {{responseDataProfile.ticker}} bought successfully.
     </ngb-alert>

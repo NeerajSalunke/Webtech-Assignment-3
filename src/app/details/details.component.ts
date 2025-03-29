@@ -68,6 +68,7 @@ export class DetailsComponent implements OnInit {
   stocksInWatchlist: string[] = []
   isAddedToWatchlist: boolean=false;
   addedToWlSuccessMsg: boolean=false;
+  removedFromWlSuccessMsg: boolean=false;
   stockBought:boolean=false;
   isBought:boolean=false;
 
@@ -82,6 +83,7 @@ export class DetailsComponent implements OnInit {
     private datePipe: DatePipe,
     private searchFormComponent: SearchFormComponent,
   ) { }
+  BASE_URL:any = 'https://stocksearchangular1502-418801.wl.r.appspot.com';
 
   encodeURL(text: string): string {
     return encodeURIComponent(text);
@@ -121,7 +123,7 @@ export class DetailsComponent implements OnInit {
   balance:any;
   quantityFromDB:number=0;
   getBalance(){
-    this.http.get('http://localhost:3000/portfolio/getBalance').subscribe({
+    this.http.get(`${this.BASE_URL}/portfolio/getBalance`).subscribe({
       next:(response:any)=>{
         // console.log(response)
         this.balance=response[0].balance
@@ -131,7 +133,7 @@ export class DetailsComponent implements OnInit {
     })
     var ticker=this.tickerSymbol
     console.log(ticker)
-    this.http.post('http://localhost:3000/portfolio/isBought',{ticker: ticker}).subscribe({
+    this.http.post(`${this.BASE_URL}/portfolio/isBought`,{ticker: ticker}).subscribe({
       next: (response:any) => {
         console.log("Received ",response);
         this.isBought = response.exists;
@@ -158,7 +160,7 @@ export class DetailsComponent implements OnInit {
           this.stockBought=false;
         }, 4000);
     // to update balance
-    this.http.get(`http://localhost:3000/portfolio/buyStock1?ticker=${value}`).subscribe({
+    this.http.get(`${this.BASE_URL}/portfolio/buyStock1?ticker=${value}`).subscribe({
       next:(response:any)=>{
         console.log(response)
         // this.balance=response[0].balance
@@ -175,7 +177,7 @@ export class DetailsComponent implements OnInit {
     console.log(data);
 
     // to update portfolio on the mongodb
-    this.http.post('http://localhost:3000/portfolio/buyStock2',data).subscribe({
+    this.http.post(`${this.BASE_URL}/portfolio/buyStock2`,data).subscribe({
       next: (response) => {
         console.log(response);
         this.getBalance();
@@ -200,7 +202,7 @@ export class DetailsComponent implements OnInit {
           this.stockSold=false;
         }, 4000);
     // to update balance
-    this.http.get(`http://localhost:3000/portfolio/buyStock1?ticker=${value}`).subscribe({
+    this.http.get(`${this.BASE_URL}/portfolio/buyStock1?ticker=${value}`).subscribe({
       next:(response:any)=>{
         console.log(response)
         // this.balance=response[0].balance
@@ -217,7 +219,7 @@ export class DetailsComponent implements OnInit {
     console.log(data);
 
     // to update portfolio on the mongodb
-    this.http.post('http://localhost:3000/portfolio/sellStock',data).subscribe({
+    this.http.post(`${this.BASE_URL}/portfolio/sellStock`,data).subscribe({
       next: (response) => {
         console.log(response);
         this.getBalance();
@@ -259,7 +261,7 @@ export class DetailsComponent implements OnInit {
 
   isAddedToWatchlistFunc(value:string) {
     this.stocksInWatchlist = []
-    this.http.get('http://localhost:3000/watchlist/getStock').subscribe({
+    this.http.get(`${this.BASE_URL}/watchlist/getStock`).subscribe({
       next: (response: any) => {
         response.forEach((element: { ticker: string }) => {
           this.stocksInWatchlist.push(element.ticker);
@@ -293,7 +295,7 @@ export class DetailsComponent implements OnInit {
     console.log("Adding this ticker:", this.tickerSymbol);
     this.stocksInWatchlist.push(this.tickerSymbol);
     
-    this.http.post('http://localhost:3000/watchlist/addStock', data).subscribe({
+    this.http.post(`${this.BASE_URL}/watchlist/addStock`, data).subscribe({
       next: (response) => {
         console.log(response);
       },
@@ -307,7 +309,11 @@ export class DetailsComponent implements OnInit {
   }
   removeFromWatchlist(value:string) {
     this.isAddedToWatchlist=false;
-    this.http.delete(`http://localhost:3000/watchlist/deleteStock?ticker=${value}`).subscribe({
+    this.removedFromWlSuccessMsg=true;
+    setTimeout(async()=>{
+      this.removedFromWlSuccessMsg=false;
+    },4000)
+    this.http.delete(`${this.BASE_URL}/watchlist/deleteStock?ticker=${value}`).subscribe({
       next: (response: any) => {
         // this.dataOfStocksInWatchlist = this.dataOfStocksInWatchlist.filter(stock=>stock.ticker!==value);
         console.log(response);

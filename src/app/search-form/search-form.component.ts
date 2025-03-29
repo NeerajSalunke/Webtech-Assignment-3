@@ -66,7 +66,8 @@ export class SearchFormComponent implements OnInit {
     // public searchForm: FormGroup
   ) { }
 
-  BASE_URL:any = 'http://localhost:3000';
+  // BASE_URL:any = 'http://localhost:3000';
+  BASE_URL:any = 'https://stocksearchangular1502-418801.wl.r.appspot.com';
 
   ngOnInit(): void {
     this.searchForm = this.formBuilder.group({ ticker: '' });

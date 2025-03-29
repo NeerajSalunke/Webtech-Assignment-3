@@ -16,6 +16,8 @@ export class WatchlistComponent {
 
   constructor(private http: HttpClient,) { }
 
+  BASE_URL:any = 'https://stocksearchangular1502-418801.wl.r.appspot.com';
+
   ngOnInit(): void {
     this.getStock();
     // this.getStockDetails();
@@ -25,7 +27,7 @@ export class WatchlistComponent {
   }
   getStock() {
     this.isLoading=true;
-    this.http.get('http://localhost:3000/watchlist/getStock').subscribe({
+    this.http.get(`${this.BASE_URL}/watchlist/getStock`).subscribe({
       next: (response: any) => {
         response.forEach((element: { ticker: string }) => {
           if(!this.stocksInWatchlist.includes(element.ticker))
@@ -43,7 +45,7 @@ export class WatchlistComponent {
     for (let i = 0; i < this.stocksInWatchlist.length; i++) {
       const stock = this.stocksInWatchlist[i];
 
-      this.http.get(`http://localhost:3000/search/quote?ticker=${stock}`).subscribe({
+      this.http.get(`${this.BASE_URL}/search/quote?ticker=${stock}`).subscribe({
         next: (response) => {
           // console.log(response);
           
@@ -62,7 +64,7 @@ export class WatchlistComponent {
   }
 
   deleteStock(value:string){
-    this.http.delete(`http://localhost:3000/watchlist/deleteStock?ticker=${value}`).subscribe({
+    this.http.delete(`${this.BASE_URL}/watchlist/deleteStock?ticker=${value}`).subscribe({
       next: (response: any) => {
         this.dataOfStocksInWatchlist = this.dataOfStocksInWatchlist.filter(stock=>stock.ticker!==value);
         console.log(response);
